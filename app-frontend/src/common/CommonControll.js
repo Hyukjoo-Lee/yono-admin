@@ -9,6 +9,7 @@ const Root = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
+
 }));
 
 const SearchBoxStyle = styled(Box)(({ theme }) => ({
@@ -17,6 +18,7 @@ const SearchBoxStyle = styled(Box)(({ theme }) => ({
 
   "& .MuiTextField-root": {
     margin: "0 8px",
+    width: 260,
   },
 }));
 
@@ -34,6 +36,7 @@ const CommonControll = ({
   delBtn,
   notice,
   handleClickDel,
+  handleClickWrite,
 }) => {
   return (
     <Root>
@@ -52,7 +55,7 @@ const CommonControll = ({
       <FlexBox>
         {notice && (
           <div style={{ marginLeft: 8 }}>
-            <CommonButton text="글쓰기" />
+            <CommonButton text="글쓰기" onClick={handleClickWrite} />
           </div>
         )}
 

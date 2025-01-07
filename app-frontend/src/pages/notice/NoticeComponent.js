@@ -11,13 +11,14 @@ import {
   TableRow,
   Checkbox,
 } from "@mui/material";
-import Diversity3Icon from "@mui/icons-material/Diversity3";
+import DescriptionIcon from "@mui/icons-material/Description";
 import CommonControll from "../../common/CommonControll";
 import CommonTableHead from "../../common/CommonTableHead";
 import CommonTitle from "../../common/CommonTitle";
 import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
 import CommonButton from "../../common/CommonButton";
+import { useNavigate } from "react-router-dom";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -45,6 +46,14 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
   },
 }));
 
+const LinkTableCellStyle = styled(TableCell)(({ theme }) => ({
+  "&.MuiTableCell-root": {
+    textDecoration: "underline",
+    color: "#4064e6",
+    cursor: "pointer",
+  },
+}));
+
 const columns = [
   { id: "no", label: "번호", minWidth: 50, align: "center" },
   { id: "title", label: "제목", minWidth: 400 },
@@ -68,6 +77,7 @@ const NoticeComponent = () => {
   const [selected, setSelected] = React.useState([]);
 
   const [delDialog, setDelDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
@@ -114,9 +124,21 @@ const NoticeComponent = () => {
     setDelDialog(false);
   };
 
+  const handleClickWrite = () => {
+    navigate("/notice/write");
+  };
+
+  const handleClickView = () => {
+    navigate("/notice/view");
+  };
+
+  const handleClickEdit = () => {
+    navigate("/notice/edit");
+  };
+
   return (
     <Root>
-      <CommonTitle icon={<Diversity3Icon />} title={"커뮤니티 관리"} />
+      <CommonTitle icon={<DescriptionIcon />} title={"공지사항 관리"} />
 
       <CommonControll
         placeholder={"제목을 입력하세요"}
@@ -124,6 +146,7 @@ const NoticeComponent = () => {
         delBtn={true}
         notice={true}
         handleClickDel={handleClickDel}
+        handleClickWrite={handleClickWrite}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -168,11 +191,13 @@ const NoticeComponent = () => {
                           />
                         </TableCell>
                         <TableCell align="center">{item.no}</TableCell>
-                        <TableCell>{item.title}</TableCell>
+                        <LinkTableCellStyle onClick={handleClickView}>
+                          {item.title}
+                        </LinkTableCellStyle>
                         <TableCell align="center">{item.date}</TableCell>
                         <TableCell align="center">{item.update}</TableCell>
                         <TableCell align="center">
-                          <CommonButton text="수정" />
+                          <CommonButton text="수정" onClick={handleClickEdit} />
                         </TableCell>
                       </TableRow>
                     );
@@ -197,7 +222,7 @@ const NoticeComponent = () => {
       {delDialog && (
         <CommonDialog
           open={delDialog}
-          title={"커뮤니티 삭제"}
+          title={"공지사항 삭제"}
           cancelBtn={selected.length === 0 ? false : true}
           onClose={handleClosekDel}
           onClick={selected.length === 0 ? handleClosekDel : handleClosekDel}

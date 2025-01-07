@@ -6,6 +6,9 @@ import UserComponent from "./pages/user/UserComponent";
 import CardComponent from "./pages/card/CardComponent";
 import CommunityComponent from "./pages/community/CommunityComponent";
 import NoticeComponent from "./pages/notice/NoticeComponent";
+import NoticeWrite from "./pages/notice/NoticeWrite";
+import NoticeEdit from "./pages/notice/NoticeEdit";
+import NoticeView from "./pages/notice/NoticeView";
 
 export const drawerWidth = 240;
 export const headerHeight = 78;
@@ -20,6 +23,9 @@ function App() {
           <Route path="/card" element={<CardComponent />} />
           <Route path="/community" element={<CommunityComponent />} />
           <Route path="/notice" element={<NoticeComponent />} />
+          <Route path="/notice/write" element={<NoticeWrite />} />
+          <Route path="/notice/edit" element={<NoticeEdit />} />
+          <Route path="/notice/view" element={<NoticeView />} />
         </Routes>
       </Layout>
     </Router>

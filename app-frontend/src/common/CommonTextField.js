@@ -4,12 +4,17 @@ import { TextField } from "@mui/material";
 
 const TextFieldStyle = styled(TextField)(({ theme }) => ({
   "&.MuiFormControl-root": {
+    width: "100%",
     "& .MuiInputBase-root": {
       borderRadius: 3,
+
       "& .MuiInputBase-input": {
         padding: "8px 10px",
         background: "#fff",
-        minWidth: 230,
+        color: "#000",
+        "&::placeholder": {
+          opacity: 0.4,
+        },
       },
       "& .MuiOutlinedInput-notchedOutline": {},
       "&:hover": {
@@ -26,7 +31,7 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const CommonTextField = ({ placeholder, text }) => {
+const CommonTextField = ({ placeholder }) => {
   return (
     <TextFieldStyle
       hiddenLabel
