@@ -128,7 +128,7 @@ const UserComponent = () => {
 
   return (
     <Root>
-      <CommonTitle icon={<GroupsIcon />} title={"회원관리"} />
+      <CommonTitle icon={<GroupsIcon />} title={"회원 관리"} />
 
       <CommonControll
         length={rows.length}
@@ -184,7 +184,7 @@ const UserComponent = () => {
           title={"회원탈퇴"}
           cancelBtn={true}
           onClose={handleClosekDel}
-          children={<p>"홍길동"님을 정말 삭제하시겠습니까?</p>}
+          children={<p>"홍길동"님을 정말 탈퇴하시겠습니까?</p>}
         />
       )}
     </Root>

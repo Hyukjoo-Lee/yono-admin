@@ -34,6 +34,7 @@ const CommonControll = ({
   selectList,
   value,
   setValue,
+  handleClickDel,
 }) => {
   return (
     <Root>
@@ -49,6 +50,15 @@ const CommonControll = ({
         />
         <CommonTextField placeholder={placeholder} />
         <CommonButton text={buttonText} />
+        {handleClickDel && (
+          <div style={{ marginLeft: 8 }}>
+            <CommonButton
+              bkColor={"red"}
+              text="삭제"
+              onClick={handleClickDel}
+            />
+          </div>
+        )}
       </SearchBoxStyle>
     </Root>
   );
