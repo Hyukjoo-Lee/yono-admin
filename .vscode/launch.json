@@ -2,13 +2,21 @@
   "configurations": [
     {
       "type": "java",
+      "name": "BackendApplication",
+      "request": "launch",
+      "mainClass": "com.yono.BackendApplication",
+      "projectName": "app-backend"
+    },
+    {
+      "type": "java",
       "name": "Spring Boot-AppBackendApplication<app-backend>",
       "request": "launch",
       "cwd": "${workspaceFolder}",
       "mainClass": "com.yono.AppBackendApplication",
       "projectName": "app-backend",
       "args": "",
-      "envFile": "${workspaceFolder}/.env"
+      "envFile": "${workspaceFolder}/.env",
+      "vmArgs": " -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=4671 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dspring.jmx.enabled=true -Djava.rmi.server.hostname=localhost -Dspring.application.admin.enabled=true -Dspring.boot.project.name=app-backend"
     }
   ]
 }
