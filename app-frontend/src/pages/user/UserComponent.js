@@ -132,7 +132,6 @@ const UserComponent = () => {
       <CommonTitle icon={<GroupsIcon />} title={"회원 관리"} />
 
       <CommonControll
-        length={rows.length}
         placeholder={getPlaceholder()}
         buttonText={"검색"}
         selectList={selectList}

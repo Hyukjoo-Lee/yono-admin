@@ -5,7 +5,7 @@ import { Box, Typography } from "@mui/material";
 const TitleBox = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
-  marginBottom: 26,
+  marginBottom: 34,
   "& .MuiTypography-root": {
     fontWeight: "bold",
     fontSize: "1.875rem",

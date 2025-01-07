@@ -136,12 +136,12 @@ const CommunityComponent = () => {
       <CommonTitle icon={<Diversity3Icon />} title={"커뮤니티 관리"} />
 
       <CommonControll
-        length={rows.length}
         placeholder={getPlaceholder()}
         buttonText={"검색"}
         selectList={selectList}
         value={selectValue}
         setValue={setSelectValue}
+        delBtn={true}
         handleClickDel={handleClickDel}
       />
 
@@ -216,9 +216,16 @@ const CommunityComponent = () => {
         <CommonDialog
           open={delDialog}
           title={"커뮤니티 삭제"}
-          cancelBtn={true}
+          cancelBtn={selected.length === 0 ? false : true}
           onClose={handleClosekDel}
-          children={<p>파일을 정말 삭제하시겠습니까?</p>}
+          onClick={selected.length === 0 ? handleClosekDel : handleClosekDel}
+          children={
+            selected.length === 0 ? (
+              <p>선택된 목록이 없습니다.</p>
+            ) : (
+              <p>{selected.length}개의 목록을 정말 삭제하시겠습니까?</p>
+            )
+          }
         />
       )}
     </Root>

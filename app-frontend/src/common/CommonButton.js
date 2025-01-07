@@ -6,6 +6,7 @@ const ButtonStyle = styled(Button, {
   shouldForwardProp: (prop) => prop !== "bkColor",
 })(({ theme, bkColor }) => ({
   "&.MuiButtonBase-root": {
+    minWidth: 76,
     height: 39,
     background: bkColor ? bkColor : "#4064e6",
     color: "#fff",
