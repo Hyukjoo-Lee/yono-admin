@@ -6,7 +6,7 @@ const TableHeadStyle = styled(TableHead)(({ theme }) => ({
   "&.MuiTableHead-root": {
     "& .MuiTableCell-root": {
       fontSize: "0.938rem",
-      fontWeight: "bold",
+      fontWeight: 500,
       background: "transparent",
       borderBottom: 0,
     },

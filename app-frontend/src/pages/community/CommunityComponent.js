@@ -16,6 +16,7 @@ import CommonControll from "../../common/CommonControll";
 import CommonTableHead from "../../common/CommonTableHead";
 import CommonTitle from "../../common/CommonTitle";
 import CommonDialog from "../../common/CommonDialog";
+import CommonEmpty from "../../common/CommonEmpty";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -155,44 +156,48 @@ const CommunityComponent = () => {
               rowCount={rows.length}
             />
             <TableBodyStyle>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, index) => {
-                  const isItemSelected = selected.includes(item.no);
-                  const labelId = `enhanced-table-checkbox-${index}`;
-                  return (
-                    <TableRow
-                      hover
-                      key={item.no}
-                      tabIndex={-1}
-                      onClick={(event) => handleClick(event, item.no)}
-                      role="checkbox"
-                      selected={isItemSelected}
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                          sx={{
-                            "&.Mui-checked": {
-                              color: "#4064e6",
-                            },
-                          }}
-                          disableRipple
-                        />
-                      </TableCell>
-                      <TableCell align="center">{item.no}</TableCell>
-                      <TableCell align="center">{item.category}</TableCell>
-                      <TableCell>{item.title}</TableCell>
-                      <TableCell align="center">{item.name}</TableCell>
-                      <TableCell align="center">{item.date}</TableCell>
-                    </TableRow>
-                  );
-                })}
+              {rows.length !== 0 ? (
+                rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, index) => {
+                    const isItemSelected = selected.includes(item.no);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+                    return (
+                      <TableRow
+                        hover
+                        key={item.no}
+                        tabIndex={-1}
+                        onClick={(event) => handleClick(event, item.no)}
+                        role="checkbox"
+                        selected={isItemSelected}
+                        sx={{ cursor: "pointer" }}
+                      >
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                              "aria-labelledby": labelId,
+                            }}
+                            sx={{
+                              "&.Mui-checked": {
+                                color: "#4064e6",
+                              },
+                            }}
+                            disableRipple
+                          />
+                        </TableCell>
+                        <TableCell align="center">{item.no}</TableCell>
+                        <TableCell align="center">{item.category}</TableCell>
+                        <TableCell>{item.title}</TableCell>
+                        <TableCell align="center">{item.name}</TableCell>
+                        <TableCell align="center">{item.date}</TableCell>
+                      </TableRow>
+                    );
+                  })
+              ) : (
+                <CommonEmpty colSpan={6} />
+              )}
             </TableBodyStyle>
           </Table>
         </TableContainer>

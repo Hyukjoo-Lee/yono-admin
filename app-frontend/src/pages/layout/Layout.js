@@ -6,7 +6,7 @@ import { drawerWidth, headerHeight } from "../../App";
 import { useNavigate } from "react-router-dom";
 
 const Root = styled("div")(({ theme }) => ({
-  "& p, input, div, button": {
+  "& p, input, div, button, th, td": {
     fontFamily: "Noto Sans KR",
     letterSpacing: "-0.2px",
   },

@@ -16,6 +16,7 @@ import CommonTableHead from "../../common/CommonTableHead";
 import CommonTitle from "../../common/CommonTitle";
 import CommonButton from "../../common/CommonButton";
 import CommonDialog from "../../common/CommonDialog";
+import CommonEmpty from "../../common/CommonEmpty";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -144,26 +145,30 @@ const UserComponent = () => {
           <Table stickyHeader aria-label="sticky table">
             <CommonTableHead columns={columns} />
             <TableBodyStyle>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((item, i) => (
-                  <TableRow hover tabIndex={-1} key={item.no}>
-                    <TableCell align="center">{item.no}</TableCell>
-                    <TableCell align="center">{item.name}</TableCell>
-                    <TableCell>{item.id}</TableCell>
-                    <TableCell>{item.email}</TableCell>
-                    <TableCell>{item.address}</TableCell>
-                    <TableCell>{item.detailAddress}</TableCell>
-                    <TableCell align="center">{item.date}</TableCell>
-                    <TableCell align="center">
-                      <CommonButton
-                        bkColor={"red"}
-                        text="탈퇴"
-                        onClick={handleClickDel}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+              {rows.length !== 0 ? (
+                rows
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((item, i) => (
+                    <TableRow hover tabIndex={-1} key={item.no}>
+                      <TableCell align="center">{item.no}</TableCell>
+                      <TableCell align="center">{item.name}</TableCell>
+                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>{item.address}</TableCell>
+                      <TableCell>{item.detailAddress}</TableCell>
+                      <TableCell align="center">{item.date}</TableCell>
+                      <TableCell align="center">
+                        <CommonButton
+                          bkColor={"red"}
+                          text="탈퇴"
+                          onClick={handleClickDel}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+              ) : (
+                <CommonEmpty colSpan={8} />
+              )}
             </TableBodyStyle>
           </Table>
         </TableContainer>
