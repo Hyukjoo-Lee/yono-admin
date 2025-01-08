@@ -4,6 +4,7 @@ import { FormControl, Select, MenuItem } from "@mui/material";
 
 const FormControlStyle = styled(FormControl)(({ theme }) => ({
   "&.MuiFormControl-root": {
+    minWidth: 110,
     "& .MuiInputBase-root": {
       borderRadius: 3,
       "& .MuiInputBase-input": {

@@ -4,6 +4,7 @@ import { Box, Button, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
 import CommonButton from "../../common/CommonButton";
+import testImage from "../../assets/images/testImage.jpg";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -67,6 +68,10 @@ const ContnetsBox = styled(Box)(({ theme }) => ({
   overflowY: "auto",
   padding: "16px",
   boxSizing: "border-box",
+  "& img": {
+    maxWidth: "100%",
+    marginBottom: 16,
+  },
   "&::-webkit-scrollbar": {
     width: "10px",
   },
@@ -109,7 +114,7 @@ const NoticeView = () => {
       <HeaderBox>
         <ButtonStyle onClick={handleClickEdit} disableRipple>
           <ChevronLeftIcon />
-          <Typography>공지사항 관리</Typography>
+          <Typography>목록</Typography>
         </ButtonStyle>
       </HeaderBox>
 
@@ -122,7 +127,11 @@ const NoticeView = () => {
       <BoxStyle>
         <BoldStyle>제목이지롱</BoldStyle>
         <ContnetsBox>
-          <TextStyle>내용이지롱</TextStyle>
+          <img src={testImage} alt="이미지" />
+          <TextStyle>
+            내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱
+            내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱
+          </TextStyle>
         </ContnetsBox>
       </BoxStyle>
 
