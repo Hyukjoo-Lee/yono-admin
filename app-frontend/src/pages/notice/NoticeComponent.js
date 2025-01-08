@@ -174,7 +174,7 @@ const NoticeComponent = () => {
                         role="checkbox"
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
+                        <TableCell>
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}

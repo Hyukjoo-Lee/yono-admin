@@ -20,7 +20,7 @@ const CommonTableHead = (props) => {
     <TableHeadStyle>
       <TableRow>
         {isChecked && (
-          <TableCell padding="checkbox">
+          <TableCell>
             <Checkbox
               color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}

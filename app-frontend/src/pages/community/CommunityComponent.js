@@ -172,7 +172,7 @@ const CommunityComponent = () => {
                         selected={isItemSelected}
                         sx={{ cursor: "pointer" }}
                       >
-                        <TableCell padding="checkbox">
+                        <TableCell >
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
