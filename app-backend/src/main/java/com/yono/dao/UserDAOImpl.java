@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.yono.vo.UserVO;
 
-import jakarta.transaction.Transactional;
-
 @Repository
 public class UserDAOImpl implements UserDAO {
 
