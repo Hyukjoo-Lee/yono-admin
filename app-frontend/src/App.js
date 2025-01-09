@@ -19,7 +19,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<MainPage />} />
-          <Route path="/user" element={<UserComponent />} />
+          <Route path="/users" element={<UserComponent />} />
           <Route path="/card" element={<CardComponent />} />
           <Route path="/community" element={<CommunityComponent />} />
           <Route path="/notice" element={<NoticeComponent />} />

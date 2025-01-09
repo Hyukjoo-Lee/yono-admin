@@ -9,7 +9,6 @@ const Root = styled(Box)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-
 }));
 
 const SearchBoxStyle = styled(Box)(({ theme }) => ({
@@ -37,6 +36,9 @@ const CommonControll = ({
   notice,
   handleClickDel,
   handleClickWrite,
+  searchInput,
+  setSearchInput,
+  handleSearch,
 }) => {
   return (
     <Root>
@@ -49,8 +51,17 @@ const CommonControll = ({
           />
         )}
 
-        <CommonTextField placeholder={placeholder} />
-        <CommonButton text={buttonText} />
+        <CommonTextField
+          placeholder={placeholder}
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleSearch(); // 엔터 키 입력 시 검색 실행
+            }
+          }}
+        />
+        <CommonButton text={buttonText} onClick={handleSearch} />
       </SearchBoxStyle>
       <FlexBox>
         {notice && (

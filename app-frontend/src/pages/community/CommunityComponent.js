@@ -31,6 +31,7 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
   "&.MuiTableBody-root": {
     "& .MuiTableRow-root": {
       "& .MuiTableCell-root": {
+        padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
       },
@@ -172,7 +173,7 @@ const CommunityComponent = () => {
                         selected={isItemSelected}
                         sx={{ cursor: "pointer" }}
                       >
-                        <TableCell >
+                        <TableCell>
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}

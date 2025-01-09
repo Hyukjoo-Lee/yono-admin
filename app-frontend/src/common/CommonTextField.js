@@ -31,14 +31,16 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const CommonTextField = ({ placeholder }) => {
+const CommonTextField = ({ placeholder, value, onChange, onKeyDown }) => {
   return (
     <TextFieldStyle
       hiddenLabel
       id="filled-hidden-label-small"
-      defaultValue=""
       variant="outlined"
       placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
     />
   );
 };

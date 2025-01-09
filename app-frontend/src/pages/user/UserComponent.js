@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -17,6 +17,8 @@ import CommonTitle from "../../common/CommonTitle";
 import CommonButton from "../../common/CommonButton";
 import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
+import { handleDeleteUser, fetchSearchResults } from "../../apis/UserApi";
+import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -31,6 +33,7 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
   "&.MuiTableBody-root": {
     "& .MuiTableRow-root": {
       "& .MuiTableCell-root": {
+        padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
       },
@@ -55,51 +58,45 @@ const columns = [
   { id: "delete", label: "탈퇴", minWidth: 100, align: "center" },
 ];
 
-function createData(no, name, id, email, address, detailAddress, date) {
-  return { no, name, id, email, address, detailAddress, date };
-}
-
-const rows = [
-  createData(
-    1,
-    "홍길동",
-    "hong1234",
-    "hong@naver.com",
-    "서울 종로구 돈화문로 26",
-    "단성사 빌딩 404호",
-    "2025-01-07"
-  ),
-  createData(
-    2,
-    "이순신이순신이순신",
-    "lee1234lee1234lee1234",
-    "leeleeleeleelee@naver.com",
-    "서울 종로구 돈화문로 26서울 종로구 돈화문로 26",
-    "단성사 빌딩 404호단성사 빌딩 404호단성사 빌딩 404호",
-    "2025-01-07"
-  ),
-  createData(
-    3,
-    "이순신",
-    "lee1234",
-    "lee@naver.com",
-    "서울 종로구 돈화문로 26",
-    "단성사 빌딩 404호",
-    "2025-01-07"
-  ),
-];
-
 const UserComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectValue, setSelectValue] = useState("전체");
+  const [searchInput, setSearchInput] = useState("");
   const [delDialog, setDelDialog] = useState(false);
+  const [list, setList] = useState([]);
+  const [selectedUserName, setSelectedUserName] = useState(""); // 선택된 유저 이름 상태 추가
+  const [selectedUserNum, setSelectedUserNum] = useState("");
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+  useEffect(() => {
+    const getUsers = async () => {
+      setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
+      try {
+        const data = await fetchSearchResults(searchInput, selectValue); // API 호출
+        const sortedList = data.sort((a, b) => a.userNum - b.userNum);
+        setList(sortedList); // 정렬된 데이터 상태로 저장
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      } finally {
+        setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
+      }
+    };
+
+    getUsers();
+  }, [searchInput, selectValue]);
 
   const selectList = [
     { label: "전체" },
     { label: "아이디" },
     { label: "이름" },
   ];
+
+  const handleSearch = async () => {
+    const data = await fetchSearchResults(searchInput, selectValue);
+    const sortedList = data.sort((a, b) => a.userNum - b.userNum);
+    setList(sortedList);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -110,11 +107,33 @@ const UserComponent = () => {
     setPage(0);
   };
 
-  const handleClickDel = () => {
+  const handleConfirmDel = async (userNum) => {
+    try {
+      await handleDeleteUser(userNum); // API 호출
+      // 상태 업데이트: 해당 유저를 탈퇴 처리로 변경
+      setList((prevList) =>
+        prevList.map((user) =>
+          user.userNum === userNum ? { ...user, state: 0 } : user
+        )
+      );
+      // 삭제후 다시 리스트 출력
+      handleSearch();
+    } catch (error) {
+      alert("회원 탈퇴 처리에 실패했습니다.");
+    } finally {
+      handleClosekDel();
+    }
+  };
+
+  const handleClickDel = (name, userNum) => {
+    setSelectedUserName(name);
+    setSelectedUserNum(userNum);
     setDelDialog(true);
   };
 
   const handleClosekDel = () => {
+    setSelectedUserName("");
+    setSelectedUserNum("");
     setDelDialog(false);
   };
 
@@ -137,6 +156,9 @@ const UserComponent = () => {
         selectList={selectList}
         value={selectValue}
         setValue={setSelectValue}
+        searchInput={searchInput} // 검색어 전달
+        setSearchInput={setSearchInput}
+        handleSearch={handleSearch}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -144,23 +166,29 @@ const UserComponent = () => {
           <Table stickyHeader aria-label="sticky table">
             <CommonTableHead columns={columns} />
             <TableBodyStyle>
-              {rows.length !== 0 ? (
-                rows
+              {isLoading ? (
+                <CommonLoading colSpan={8} />
+              ) : list.length !== 0 ? (
+                list
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, i) => (
-                    <TableRow hover tabIndex={-1} key={item.no}>
-                      <TableCell align="center">{item.no}</TableCell>
+                    <TableRow hover tabIndex={-1} key={item.userNum}>
+                      <TableCell align="center">{item.userNum}</TableCell>
                       <TableCell align="center">{item.name}</TableCell>
-                      <TableCell>{item.id}</TableCell>
+                      <TableCell>{item.userId}</TableCell>
                       <TableCell>{item.email}</TableCell>
                       <TableCell>{item.address}</TableCell>
                       <TableCell>{item.detailAddress}</TableCell>
-                      <TableCell align="center">{item.date}</TableCell>
+                      <TableCell align="center">
+                        {new Date(item.createdAt).toISOString().split("T")[0]}
+                      </TableCell>
                       <TableCell align="center">
                         <CommonButton
                           bkColor={"red"}
                           text="탈퇴"
-                          onClick={handleClickDel}
+                          onClick={() =>
+                            handleClickDel(item.name, item.userNum)
+                          }
                         />
                       </TableCell>
                     </TableRow>
@@ -174,7 +202,7 @@ const UserComponent = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={list.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -188,7 +216,15 @@ const UserComponent = () => {
           title={"회원탈퇴"}
           cancelBtn={true}
           onClose={handleClosekDel}
-          children={<p>"홍길동"님을 정말 탈퇴하시겠습니까?</p>}
+          onClick={() => handleConfirmDel(selectedUserNum)}
+          children={
+            <p>
+              <span style={{ fontWeight: "bold", color: "#4064e6" }}>
+                {selectedUserName}
+              </span>
+              님을 정말 탈퇴하시겠습니까?
+            </p>
+          }
         />
       )}
     </Root>
