@@ -210,7 +210,9 @@ const NoticeComponent = () => {
               rowCount={list.length}
             />
             <TableBodyStyle>
-              {list.length !== 0 ? (
+              {isLoading ? (
+                <CommonLoading colSpan={6} />
+              ) : list.length !== 0 ? (
                 list
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => {
