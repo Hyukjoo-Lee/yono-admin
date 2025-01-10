@@ -54,8 +54,8 @@ const Layout = ({ children }) => {
   const menuList = [
     { title: "회원 관리", path: "/users" },
     { title: "카드 관리", path: "/card" },
-    { title: "커뮤니티 관리", path: "/admin" },
-    { title: "공지사항 관리", path: "/notice" },
+    { title: "커뮤니티 관리", path: "/communityList" },
+    { title: "공지사항 관리", path: "/noticeList" },
   ];
 
   useEffect(() => {

@@ -8,7 +8,7 @@ export const fetchSearchCommunity = async (keyword, selectValue) => {
   return response.data;
 };
 
-// 커뮤니티 삭제제
+// 커뮤니티 삭제
 export const deleteCommunityItems = async (ids) => {
   const response = await axios.post("/community/delete", ids);
   return response.data;

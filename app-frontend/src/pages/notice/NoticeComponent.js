@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -19,6 +19,8 @@ import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
 import CommonButton from "../../common/CommonButton";
 import { useNavigate } from "react-router-dom";
+import { fetchSearchNotice, deleteNotice } from "../../apis/NoticeApi";
+import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -36,6 +38,10 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
+        "&:first-of-type": {
+          width: 80,
+          boxSizing: "border-box",
+        },
       },
       "& td:first-of-type": {
         borderRadius: "10px 0 0 10px",
@@ -62,27 +68,37 @@ const columns = [
   { id: "update", label: "수정일", minWidth: 100, align: "center" },
 ];
 
-function createData(no, title, date, update) {
-  return { no, title, date, update };
-}
-
-const rows = [
-  createData(1, "공지글이지롱~", "2025-01-07", "2025-01-08"),
-  createData(2, "공지글이지롱~", "2025-01-07", ""),
-  createData(3, "공지글이지롱~", "2025-01-07", ""),
-];
-
 const NoticeComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = React.useState([]);
-
   const [delDialog, setDelDialog] = useState(false);
+  const [searchInput, setSearchInput] = useState(""); // 검색입력
+  const [list, setList] = useState([]); // 현재 표시할 리스트
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
+      try {
+        const data = await fetchSearchNotice("", ""); // API 호출
+        const sortedList = data.sort((a, b) => a.noticeNo - b.noticeNo);
+        setList(sortedList); // 초기에는 전체 데이터를 표시
+      } catch (error) {
+        console.error("전체 데이터를 불러오지 못했습니다:", error);
+      } finally {
+        setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
+      }
+    };
+
+    fetchAllData();
+  }, []);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.no);
+      const newSelected = list.map((n) => n.noticeNo);
       setSelected(newSelected);
       return;
     }
@@ -108,6 +124,19 @@ const NoticeComponent = () => {
     setSelected(newSelected);
   };
 
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchSearchNotice(searchInput); // 검색 API 호출
+      const sortedList = data.sort((a, b) => a.noticeNo - b.noticeNo);
+      setList(sortedList); // 검색된 결과로 리스트 갱신
+    } catch (error) {
+      console.error("검색 데이터를 불러오지 못했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -115,6 +144,23 @@ const NoticeComponent = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleConfirmDel = async () => {
+    try {
+      // 삭제 API 호출
+      await deleteNotice(selected);
+
+      // 삭제 성공 후 리스트 갱신
+      const updatedList = list.filter(
+        (item) => !selected.includes(item.noticeNo)
+      );
+      setList(updatedList); // 현재 리스트에서 삭제된 항목 제거
+      setSelected([]); // 선택 초기화
+      setDelDialog(false);
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+    }
   };
 
   const handleClickDel = () => {
@@ -148,6 +194,9 @@ const NoticeComponent = () => {
         notice={true}
         handleClickDel={handleClickDel}
         handleClickWrite={handleClickWrite}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        handleSearch={handleSearch}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -158,19 +207,19 @@ const NoticeComponent = () => {
               columns={columns}
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={rows.length}
+              rowCount={list.length}
             />
             <TableBodyStyle>
-              {rows.length !== 0 ? (
-                rows
+              {list.length !== 0 ? (
+                list
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => {
-                    const isItemSelected = selected.includes(item.no);
+                    const isItemSelected = selected.includes(item.noticeNo);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
                         hover
-                        key={item.no}
+                        key={item.noticeNo}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
@@ -179,7 +228,9 @@ const NoticeComponent = () => {
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
-                            onClick={(event) => handleClick(event, item.no)}
+                            onClick={(event) =>
+                              handleClick(event, item.noticeNo)
+                            }
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -191,12 +242,16 @@ const NoticeComponent = () => {
                             disableRipple
                           />
                         </TableCell>
-                        <TableCell align="center">{item.no}</TableCell>
+                        <TableCell align="center">{item.noticeNo}</TableCell>
                         <LinkTableCellStyle onClick={handleClickView}>
                           {item.title}
                         </LinkTableCellStyle>
-                        <TableCell align="center">{item.date}</TableCell>
-                        <TableCell align="center">{item.update}</TableCell>
+                        <TableCell align="center">
+                          {new Date(item.createdAt).toISOString().split("T")[0]}
+                        </TableCell>
+                        <TableCell align="center">
+                          {new Date(item.updatedAt).toISOString().split("T")[0]}
+                        </TableCell>
                         <TableCell align="center">
                           <CommonButton text="수정" onClick={handleClickEdit} />
                         </TableCell>
@@ -212,7 +267,7 @@ const NoticeComponent = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={list.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -222,11 +277,11 @@ const NoticeComponent = () => {
 
       {delDialog && (
         <CommonDialog
-          open={delDialog}
+          open={isLoading ? false : delDialog}
           title={"공지사항 삭제"}
           cancelBtn={selected.length === 0 ? false : true}
           onClose={handleClosekDel}
-          onClick={selected.length === 0 ? handleClosekDel : handleClosekDel}
+          onClick={selected.length === 0 ? handleClosekDel : handleConfirmDel}
           children={
             selected.length === 0 ? (
               <p>선택된 목록이 없습니다.</p>

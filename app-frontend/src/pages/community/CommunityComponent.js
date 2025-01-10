@@ -39,9 +39,14 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
+        "&:first-of-type": {
+          width: 80,
+          boxSizing: "border-box",
+        },
       },
       "& td:first-of-type": {
-        borderRadius: "10px 0 0 10px",
+        width: 80,
+        boxSizing: "border-box",
       },
       "& td:last-of-type": {
         borderRadius: "0 10px 10px 0",
@@ -53,7 +58,7 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
 const columns = [
   { id: "no", label: "번호", minWidth: 50, align: "center" },
   { id: "category", label: "카테고리", minWidth: 100, align: "center" },
-  { id: "title", label: "제목", minWidth: 220 },
+  { id: "title", label: "제목", minWidth: 300 },
   { id: "name", label: "작성자", minWidth: 100, align: "center" },
   { id: "date", label: "등록일", minWidth: 100, align: "center" },
 ];
@@ -144,7 +149,7 @@ const CommunityComponent = () => {
   const handleConfirmDel = async () => {
     try {
       // 삭제 API 호출
-      await deleteCommunityItems(selected); // `deleteCommunityItems`는 삭제 API 함수로 구현 필요
+      await deleteCommunityItems(selected); 
 
       // 삭제 성공 후 리스트 갱신
       const updatedList = list.filter((item) => !selected.includes(item.no));
