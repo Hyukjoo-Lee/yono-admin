@@ -3,6 +3,8 @@ package com.yono.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,13 @@ public class UserController {
         }
     }
 
-    @PutMapping("/delete") // http://localhost:8066/user/delete?userNum=userNum&state=0
-    public int delUserState(@RequestParam("userNum") int userNum, @RequestParam("state") int state) {
-        return userService.delUserState(userNum, state);
-    }
+    @PutMapping("/delete")
+    public ResponseEntity<String> delUserState(@RequestParam("userNum") int userNum, @RequestParam("state") int state) {
+        int result = userService.delUserState(userNum, state);
+        if (result > 0) {
+            return ResponseEntity.ok("Success");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+        }
+    }   
 }

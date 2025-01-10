@@ -73,18 +73,18 @@ const UserComponent = () => {
     const getUsers = async () => {
       setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
       try {
-        const data = await fetchSearchResults(searchInput, selectValue); // API 호출
+        const data = await fetchSearchResults("", ""); // API 호출
         const sortedList = data.sort((a, b) => a.userNum - b.userNum);
-        setList(sortedList); // 정렬된 데이터 상태로 저장
+        setList(sortedList); // 초기에는 전체 데이터를 표시
       } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("전체 데이터를 불러오지 못했습니다:", error);
       } finally {
         setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
       }
     };
 
     getUsers();
-  }, [searchInput, selectValue]);
+  }, []);
 
   const selectList = [
     { label: "전체" },
@@ -93,9 +93,16 @@ const UserComponent = () => {
   ];
 
   const handleSearch = async () => {
-    const data = await fetchSearchResults(searchInput, selectValue);
-    const sortedList = data.sort((a, b) => a.userNum - b.userNum);
-    setList(sortedList);
+    setIsLoading(true);
+    try {
+      const data = await fetchSearchResults(searchInput, selectValue); // 검색 API 호출
+      const sortedList = data.sort((a, b) => a.no - b.no);
+      setList(sortedList); // 검색된 결과로 리스트 갱신
+    } catch (error) {
+      console.error("검색 데이터를 불러오지 못했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChangePage = (event, newPage) => {
@@ -110,12 +117,14 @@ const UserComponent = () => {
   const handleConfirmDel = async (userNum) => {
     try {
       await handleDeleteUser(userNum); // API 호출
+      
       // 상태 업데이트: 해당 유저를 탈퇴 처리로 변경
       setList((prevList) =>
         prevList.map((user) =>
           user.userNum === userNum ? { ...user, state: 0 } : user
         )
       );
+      
       // 삭제후 다시 리스트 출력
       handleSearch();
     } catch (error) {

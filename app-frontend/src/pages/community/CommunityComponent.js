@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -17,6 +17,11 @@ import CommonTableHead from "../../common/CommonTableHead";
 import CommonTitle from "../../common/CommonTitle";
 import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
+import {
+  fetchSearchCommunity,
+  deleteCommunityItems,
+} from "../../apis/CommunityApi";
+import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -53,26 +58,36 @@ const columns = [
   { id: "date", label: "등록일", minWidth: 100, align: "center" },
 ];
 
-function createData(no, category, title, name, date) {
-  return { no, category, title, name, date };
-}
-
-const rows = [
-  createData(1, "정보공유", "정보공유합니다!!!!", "홍길동", "2025-01-07"),
-  createData(2, "정보공유", "정보공유합니다!!!!", "홍길동", "2025-01-07"),
-];
-
 const CommunityComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = React.useState([]);
-
-  const [selectValue, setSelectValue] = useState("전체");
+  const [selected, setSelected] = React.useState([]); // 체크박스
+  const [selectValue, setSelectValue] = useState("카테고리"); // 검색
   const [delDialog, setDelDialog] = useState(false);
+  const [searchInput, setSearchInput] = useState(""); // 검색입력
+  const [list, setList] = useState([]); // 현재 표시할 리스트
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+
+  useEffect(() => {
+    const fetchAllData = async () => {
+      setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
+      try {
+        const data = await fetchSearchCommunity("", ""); // API 호출
+        const sortedList = data.sort((a, b) => a.no - b.no);
+        setList(sortedList); // 초기에는 전체 데이터를 표시
+      } catch (error) {
+        console.error("전체 데이터를 불러오지 못했습니다:", error);
+      } finally {
+        setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
+      }
+    };
+
+    fetchAllData();
+  }, []);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.no);
+      const newSelected = list.map((n) => n.no);
       setSelected(newSelected);
       return;
     }
@@ -98,6 +113,19 @@ const CommunityComponent = () => {
     setSelected(newSelected);
   };
 
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchSearchCommunity(searchInput, selectValue); // 검색 API 호출
+      const sortedList = data.sort((a, b) => a.no - b.no);
+      setList(sortedList); // 검색된 결과로 리스트 갱신
+    } catch (error) {
+      console.error("검색 데이터를 불러오지 못했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -108,11 +136,25 @@ const CommunityComponent = () => {
   };
 
   const selectList = [
-    { label: "전체" },
     { label: "카테고리" },
     { label: "작성자" },
     { label: "제목" },
   ];
+
+  const handleConfirmDel = async () => {
+    try {
+      // 삭제 API 호출
+      await deleteCommunityItems(selected); // `deleteCommunityItems`는 삭제 API 함수로 구현 필요
+
+      // 삭제 성공 후 리스트 갱신
+      const updatedList = list.filter((item) => !selected.includes(item.no));
+      setList(updatedList); // 현재 리스트에서 삭제된 항목 제거
+      setSelected([]); // 선택 초기화
+      setDelDialog(false);
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+    }
+  };
 
   const handleClickDel = () => {
     setDelDialog(true);
@@ -124,7 +166,6 @@ const CommunityComponent = () => {
 
   const getPlaceholder = () => {
     const placeholders = {
-      전체: "검색할 키워드를 입력해주세요.",
       카테고리: "카테고리를 입력해주세요.",
       작성자: "작성자를 입력해주세요.",
       제목: "제목을 입력해주세요.",
@@ -144,6 +185,9 @@ const CommunityComponent = () => {
         setValue={setSelectValue}
         delBtn={true}
         handleClickDel={handleClickDel}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        handleSearch={handleSearch}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -154,11 +198,13 @@ const CommunityComponent = () => {
               columns={columns}
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={rows.length}
+              rowCount={list.length}
             />
             <TableBodyStyle>
-              {rows.length !== 0 ? (
-                rows
+              {isLoading ? (
+                <CommonLoading colSpan={6} />
+              ) : list.length !== 0 ? (
+                list
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => {
                     const isItemSelected = selected.includes(item.no);
@@ -191,8 +237,8 @@ const CommunityComponent = () => {
                         <TableCell align="center">{item.no}</TableCell>
                         <TableCell align="center">{item.category}</TableCell>
                         <TableCell>{item.title}</TableCell>
-                        <TableCell align="center">{item.name}</TableCell>
-                        <TableCell align="center">{item.date}</TableCell>
+                        <TableCell align="center">{item.userid}</TableCell>
+                        <TableCell align="center">{item.regdate}</TableCell>
                       </TableRow>
                     );
                   })
@@ -205,7 +251,7 @@ const CommunityComponent = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={list.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -215,11 +261,11 @@ const CommunityComponent = () => {
 
       {delDialog && (
         <CommonDialog
-          open={delDialog}
+          open={isLoading ? false : delDialog}
           title={"커뮤니티 삭제"}
           cancelBtn={selected.length === 0 ? false : true}
           onClose={handleClosekDel}
-          onClick={selected.length === 0 ? handleClosekDel : handleClosekDel}
+          onClick={selected.length === 0 ? handleClosekDel : handleConfirmDel}
           children={
             selected.length === 0 ? (
               <p>선택된 목록이 없습니다.</p>

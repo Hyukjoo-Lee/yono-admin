@@ -33,15 +33,8 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 const ListStyle = styled(List)(({ theme }) => ({
-  "& .MuiButtonBase-root": {
-    padding: 16,
-    fontSize: "1.125rem",
-    borderRadius: 6,
-    "&:hover": {
-      background: "#EFF3FD",
-      color: "#4064e6",
-      fontWeight: "bold",
-    },
+  "& .MuiListItem-root": {
+    padding: "2px 16px",
   },
 }));
 
@@ -50,9 +43,17 @@ const ListItemStyle = styled(ListItem, {
 })(({ theme, isSelect }) => ({
   "&.MuiListItem-root": {
     "& .MuiButtonBase-root": {
+      padding: 16,
+      fontSize: "1.125rem",
+      borderRadius: 6,
       background: isSelect ? "#EFF3FD" : "#fff",
       color: isSelect ? "#4064e6" : "#000",
       fontWeight: isSelect ? "bold" : 400,
+      "&:hover": {
+        background: "#EFF3FD",
+        color: "#4064e6",
+        fontWeight: "bold",
+      },
     },
   },
 }));

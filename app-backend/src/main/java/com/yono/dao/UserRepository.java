@@ -29,5 +29,5 @@ public interface UserRepository extends JpaRepository<UserVO, Integer> {
 
     @Modifying
     @Query("UPDATE UserVO u SET u.state = :state WHERE u.userNum = :userNum")
-    int delUserState(int userNum, int state);
+    int delUserState(@Param("userNum") int userNum, @Param("state") int state);
 }
