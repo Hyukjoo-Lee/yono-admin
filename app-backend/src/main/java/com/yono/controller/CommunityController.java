@@ -37,8 +37,8 @@ public class CommunityController {
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteCommunityItems(@RequestBody List<Integer> ids) {
-    communityService.deleteByIds(ids);
-    return ResponseEntity.ok().build();
-}
+        communityService.deleteByIds(ids);
+        return ResponseEntity.ok().build();
+    }
 
 }
