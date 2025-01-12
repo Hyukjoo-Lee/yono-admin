@@ -8,4 +8,5 @@ public interface NoticeService {
     
     List<NoticeVO> searchNotice(String keyword);
     void deleteByNotice (List<Integer> ids);
+    void saveNotice(NoticeVO notice);
 }

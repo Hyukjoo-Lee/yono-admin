@@ -23,9 +23,9 @@ function App() {
           <Route path="/card" element={<CardComponent />} />
           <Route path="/communityList" element={<CommunityComponent />} />
           <Route path="/noticeList" element={<NoticeComponent />} />
-          <Route path="/notice/write" element={<NoticeWrite />} />
-          <Route path="/notice/edit" element={<NoticeEdit />} />
-          <Route path="/notice/view" element={<NoticeView />} />
+          <Route path="/noticeWrite" element={<NoticeWrite />} />
+          <Route path="/noticeEdit" element={<NoticeEdit />} />
+          <Route path="/noticeView" element={<NoticeView />} />
         </Routes>
       </Layout>
     </Router>

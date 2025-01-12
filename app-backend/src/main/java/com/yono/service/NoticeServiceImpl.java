@@ -24,4 +24,9 @@ public class NoticeServiceImpl implements NoticeService {
     public void deleteByNotice(List<Integer> ids) {
         noticeDao.deleteByNotice(ids);
     }
+
+    @Override
+    public void saveNotice(NoticeVO notice) {
+        noticeDao.saveNotice(notice);
+    }
 }

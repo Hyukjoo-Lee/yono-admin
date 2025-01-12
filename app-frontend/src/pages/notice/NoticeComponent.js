@@ -172,15 +172,15 @@ const NoticeComponent = () => {
   };
 
   const handleClickWrite = () => {
-    navigate("/notice/write");
+    navigate("/noticeWrite");
   };
 
   const handleClickView = () => {
-    navigate("/notice/view");
+    navigate("/noticeView");
   };
 
   const handleClickEdit = () => {
-    navigate("/notice/edit");
+    navigate("/noticeEdit");
   };
 
   return (

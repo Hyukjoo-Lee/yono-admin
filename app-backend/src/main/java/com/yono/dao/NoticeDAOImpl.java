@@ -11,15 +11,20 @@ import com.yono.vo.NoticeVO;
 public class NoticeDAOImpl implements NoticeDAO {
 
     @Autowired
-    private NoticeRepository NoticeRepo;
+    private NoticeRepository noticeRepo;
 
     @Override
     public List<NoticeVO> searchNotice(String keyword) {
-        return NoticeRepo.searchNotice(keyword);
+        return noticeRepo.searchNotice(keyword);
     }
 
     @Override
     public void deleteByNotice(List<Integer> ids) {
-        NoticeRepo.deleteByNotice(ids);
+        noticeRepo.deleteByNotice(ids);
+    }
+
+    @Override
+    public void saveNotice(NoticeVO notice) {
+        noticeRepo.save(notice);
     }
 }

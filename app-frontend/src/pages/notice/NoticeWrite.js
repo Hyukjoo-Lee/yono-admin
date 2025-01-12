@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Button, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
 import CommonTextField from "../../common/CommonTextField";
 import CommonButton from "../../common/CommonButton";
+import { createNotice } from "../../apis/NoticeApi";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -133,7 +134,37 @@ const ButtonBox = styled(Box)(({ theme }) => ({
 }));
 
 const NoticeWrite = () => {
+  const [file, setFile] = useState(null);
+  const [fileName, setFileName] = useState("");
+  const [title, setTitle] = useState(""); // 제목 상태 추가
+  const [content, setContent] = useState(""); // 내용 상태 추가
   const navigate = useNavigate();
+
+  const handleTitleChange = (event) => setTitle(event.target.value); // 제목 변경 핸들러
+  const handleContentChange = (event) => setContent(event.target.value); // 내용 변경 핸들러
+
+  const handleFileChange = (event) => {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+      setFileName(selectedFile.name);
+    }
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("title", title);
+    formData.append("content", content);
+
+    try {
+      const response = await createNotice(formData);
+      console.log("Notice created successfully:", response);
+      navigate("/noticeList"); // 등록 후 목록 페이지로 이동
+    } catch (error) {
+      console.error("Error creating notice:", error);
+    }
+  };
 
   const handleClickEdit = () => {
     navigate(-1);
@@ -152,17 +183,34 @@ const NoticeWrite = () => {
       <BoxStyle>
         <FlexBox>
           <TextStyle>제목</TextStyle>
-          <CommonTextField placeholder="제목을 입력하세요." />
+          <CommonTextField
+            id={"title"}
+            name={"title"}
+            placeholder="제목을 입력하세요."
+            value={title}
+            onChange={handleTitleChange}
+          />
         </FlexBox>
 
         <FlexBox style={{ alignItems: "flex-start" }}>
           <TextStyle>내용</TextStyle>
-          <TextareaStyle rows={20} placeholder="내용을 입력하세요." />
+          <TextareaStyle
+            rows={20}
+            placeholder="내용을 입력하세요."
+            value={content}
+            onChange={handleContentChange} // 내용 입력 핸들러 연결
+          />
         </FlexBox>
 
         <UploadFlexBox>
           <TextStyle>사진 첨부</TextStyle>
-          <CommonTextField placeholder="사진을 선택해주세요." />
+          <CommonTextField
+            id={"fileName"}
+            name={"fileName"}
+            placeholder="사진을 선택해주세요."
+            value={fileName}
+            readOnly={true}
+          />
           <UploadButton
             component="label"
             role={undefined}
@@ -172,15 +220,15 @@ const NoticeWrite = () => {
             사진 등록
             <VisuallyHiddenInput
               type="file"
-              onChange={(event) => console.log(event.target.files)}
-              multiple
+              accept="image/*"
+              onChange={handleFileChange}
             />
           </UploadButton>
         </UploadFlexBox>
       </BoxStyle>
 
       <ButtonBox>
-        <CommonButton text="등록" />
+        <CommonButton onClick={handleSubmit} text="등록" />
         <CommonButton bkColor={"red"} text="취소" />
       </ButtonBox>
     </Root>

@@ -17,7 +17,7 @@ values (notice_seq.nextval, '오픈했어어', 'jeId', '내용입니다.', '/ima
 
 commit;
 
-select * from notice;
+select * from notice order by NOTICE_NO;
 
 drop table notice;
 
