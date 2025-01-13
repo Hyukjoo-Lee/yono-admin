@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Button, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
 import CommonTextField from "../../common/CommonTextField";
 import CommonButton from "../../common/CommonButton";
+import { updateNotice, fetchNoticeDetail } from "../../apis/NoticeApi";
+import { useParams } from "react-router-dom";
+import CommonDialog from "../../common/CommonDialog";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -39,16 +43,21 @@ const FlexBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   marginBottom: 16,
-  "& .MuiFormControl-root": {
-    width: "calc(100% - 120px) !important",
+  "& .MuiFormControl-root": {},
+}));
+
+const FlexBoxIn = styled(Box)(({ theme }) => ({
+  width: "calc(100% - 120px)",
+}));
+
+const ErrorText = styled(Typography)(({ theme }) => ({
+  "&.MuiTypography-root": {
+    fontSize: "0.875rem",
+    color: "red",
   },
 }));
 
-const UploadFlexBox = styled(FlexBox)(({ theme }) => ({
-  "& .MuiFormControl-root": {
-    width: "calc(100% - 120px - 116px) !important",
-  },
-}));
+const UploadFlexBox = styled(FlexBox)(({ theme }) => ({}));
 
 const Titlestyle = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
@@ -67,8 +76,36 @@ const TextStyle = styled(Typography)(({ theme }) => ({
   },
 }));
 
+const FileBox = styled(Box)(({ theme }) => ({
+  width: "calc(100% - 120px - 116px)",
+  height: 39,
+  display: "flex",
+  alignItems: "center",
+  border: "1px solid rgba(0, 0, 0, 0.23)",
+  boxSizing: "border-box",
+  borderRadius: 3,
+  padding: "8px 10px",
+  background: "#fff",
+  "& .MuiTypography-root": {
+    color: "#000",
+    opacity: 0.4,
+  },
+  "& .MuiButtonBase-root": {
+    minWidth: 30,
+    padding: 0,
+    "&:hover": {
+      background: "transparent",
+    },
+    "& svg": {
+      width: 20,
+      height: 20,
+      fill: "#4064e6",
+    },
+  },
+}));
+
 const TextareaStyle = styled("textarea")(({ theme }) => ({
-  width: "calc(100% - 120px)",
+  width: "100%",
   borderRadius: 3,
   border: "1px solid rgba(0, 0, 0, 0.23)",
   outline: "none",
@@ -133,11 +170,125 @@ const ButtonBox = styled(Box)(({ theme }) => ({
 }));
 
 const NoticeEdit = () => {
+  const { id } = useParams(); // URL에서 ID 가져오기
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [notice, setNotice] = useState({ imgurl: "" }); // 공지사항 데이터 상태
+  const [file, setFile] = useState(null);
+  const [errors, setErrors] = useState({ title: false, content: false });
   const navigate = useNavigate();
+  const [delDialog, setDelDialog] = useState(false);
+
+  useEffect(() => {
+    const fetchNotice = async () => {
+      try {
+        const data = await fetchNoticeDetail(id); // API 호출
+        setNotice(data); // 공지사항 데이터 설정
+        setTitle(data.title || ""); // 제목 초기값 설정
+        setContent(data.content || ""); // 내용 초기값 설정
+      } catch (error) {
+        console.error("Error fetching notice:", error);
+      }
+    };
+
+    fetchNotice();
+  }, [id]);
+
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value); // 제목 변경 핸들러
+    if (event.target.value.trim() !== "") {
+      setErrors((prev) => ({ ...prev, title: false }));
+    }
+  };
+
+  const handleContentChange = (event) => {
+    setContent(event.target.value); // 내용 변경 핸들러
+    if (event.target.value.trim() !== "") {
+      setErrors((prev) => ({ ...prev, content: false }));
+    }
+  };
+
+  const handleUpdate = async () => {
+    const newErrors = {
+      title: title.trim() === "",
+      content: content.trim() === "",
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.title || newErrors.content) {
+      return;
+    }
+
+    // if (!title.trim()) {
+    //   setErrors((prev) => ({ ...prev, title: true }));
+    //   return;
+    // }
+    // if (!content.trim()) {
+    //   setErrors((prev) => ({ ...prev, content: true }));
+    //   return;
+    // }
+
+    const formData = new FormData();
+    formData.append("id", id); // 수정할 공지사항 ID
+    formData.append("title", title);
+    formData.append("content", content);
+
+    if (file) {
+      formData.append("file", file); // 새 파일 추가
+    } else {
+      formData.append("file", ""); // 빈 파일 정보 전송
+    }
+
+    const success = await updateNotice(formData);
+    if (success) {
+      setDelDialog(true);
+    } else {
+      alert("공지사항 수정에 실패했습니다.");
+    }
+  };
+
+  const handleFileChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setFile(event.target.files[0]); // 선택된 파일 저장
+      setNotice((prev) => ({
+        ...prev,
+        imgurl: event.target.files[0].name, // UI에 선택한 파일명 표시
+      }));
+    }
+  };
+
+  const handleClickReset = () => {
+    const fetchNotice = async () => {
+      try {
+        const data = await fetchNoticeDetail(id); // API 호출
+        setNotice(data); // 공지사항 데이터 설정
+        setTitle(data.title); // 제목 초기값 설정
+        setContent(data.content); // 내용 초기값 설정
+      } catch (error) {
+        console.error("Error fetching notice:", error);
+      }
+    };
+
+    fetchNotice();
+  };
+
+  const handleCloseDialog = () => {
+    navigate("/noticeList"); // 리스트 페이지로 이동
+  };
+
+  const handleFileDelete = () => {
+    setFile(null); // 선택된 파일 초기화
+    setNotice((prev) => ({
+      ...prev,
+      imgurl: null, // 기존 이미지 경로를 null로 설정
+    }));
+  };
 
   const handleClickEdit = () => {
     navigate(-1);
   };
+
   return (
     <Root>
       <HeaderBox>
@@ -151,18 +302,49 @@ const NoticeEdit = () => {
 
       <BoxStyle>
         <FlexBox>
-          <TextStyle>제목</TextStyle>
-          <CommonTextField placeholder="제목을 입력하세요." />
+          <TextStyle style={{ paddingBottom: 25 }}>제목</TextStyle>
+          <FlexBoxIn>
+            <CommonTextField
+              id={"title"}
+              name={"title"}
+              value={title}
+              placeholder="제목을 입력하세요."
+              onChange={handleTitleChange}
+            />
+            {errors.title && <ErrorText>제목을 입력해주세요.</ErrorText>}
+          </FlexBoxIn>
         </FlexBox>
 
         <FlexBox style={{ alignItems: "flex-start" }}>
           <TextStyle>내용</TextStyle>
-          <TextareaStyle rows={20} placeholder="내용을 입력하세요." />
+          <FlexBoxIn>
+            <TextareaStyle
+              rows={20}
+              value={content}
+              placeholder="내용을 입력하세요."
+              onChange={handleContentChange}
+            />
+            {errors.content && <ErrorText>내용을 입력해주세요.</ErrorText>}
+          </FlexBoxIn>
         </FlexBox>
 
         <UploadFlexBox>
           <TextStyle>사진 첨부</TextStyle>
-          <CommonTextField placeholder="사진을 선택해주세요." />
+          <FileBox>
+            <Box>
+              <Typography>
+                {notice.imgurl
+                  ? notice.imgurl.split("/").pop()
+                  : "사진을 선택해주세요."}
+              </Typography>
+            </Box>
+            {notice.imgurl && (
+              <Button onClick={handleFileDelete}>
+                <CloseIcon />
+              </Button>
+            )}
+          </FileBox>
+
           <UploadButton
             component="label"
             role={undefined}
@@ -170,19 +352,25 @@ const NoticeEdit = () => {
             disableRipple
           >
             사진 등록
-            <VisuallyHiddenInput
-              type="file"
-              onChange={(event) => console.log(event.target.files)}
-              multiple
-            />
+            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
           </UploadButton>
         </UploadFlexBox>
       </BoxStyle>
 
       <ButtonBox>
-        <CommonButton text="수정" />
-        <CommonButton bkColor={"red"} text="취소" />
+        <CommonButton onClick={handleUpdate} text="수정" />
+        <CommonButton onClick={handleClickReset} bkColor={"red"} text="취소" />
       </ButtonBox>
+
+      {delDialog && (
+        <CommonDialog
+          open={delDialog}
+          title={"공지사항 수정"}
+          onClose={handleCloseDialog}
+          onClick={handleCloseDialog}
+          children={<p>공지사항이 수정되었습니다.</p>}
+        />
+      )}
     </Root>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import Layout from "./pages/layout/Layout";
 import UserComponent from "./pages/user/UserComponent";
@@ -24,8 +24,8 @@ function App() {
           <Route path="/communityList" element={<CommunityComponent />} />
           <Route path="/noticeList" element={<NoticeComponent />} />
           <Route path="/noticeWrite" element={<NoticeWrite />} />
-          <Route path="/noticeEdit" element={<NoticeEdit />} />
-          <Route path="/noticeView" element={<NoticeView />} />
+          <Route path="/noticeEdit/:id" element={<NoticeEdit />} />
+          <Route path="/noticeView/:id" element={<NoticeView />} />
         </Routes>
       </Layout>
     </Router>

@@ -7,7 +7,13 @@ const TextFieldStyle = styled(TextField)(({ theme }) => ({
     width: "100%",
     "& .MuiInputBase-root": {
       borderRadius: 3,
-
+      "&.Mui-disabled": {
+        background: "#fff",
+        color: "#000",
+        "& .MuiInputBase-input::placeholder": {
+          opacity: 1,
+        },
+      },
       "& .MuiInputBase-input": {
         padding: "8px 10px",
         background: "#fff",
@@ -38,7 +44,7 @@ const CommonTextField = ({
   value,
   onChange,
   onKeyDown,
-  readOnly,
+  disabled,
 }) => {
   return (
     <TextFieldStyle
@@ -50,7 +56,7 @@ const CommonTextField = ({
       value={value}
       onChange={onChange}
       onKeyDown={onKeyDown}
-      readOnly={readOnly}
+      disabled={disabled}
     />
   );
 };

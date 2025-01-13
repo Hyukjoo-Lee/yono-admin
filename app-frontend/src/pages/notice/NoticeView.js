@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, Button, Typography } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { useNavigate } from "react-router-dom";
 import CommonButton from "../../common/CommonButton";
-import testImage from "../../assets/images/testImage.jpg";
+import { useParams } from "react-router-dom";
+import { fetchNoticeDetail, deleteNotice } from "../../apis/NoticeApi";
+import CommonDialog from "../../common/CommonDialog";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -104,15 +106,62 @@ const ButtonBox = styled(Box)(({ theme }) => ({
 }));
 
 const NoticeView = () => {
+  const { id } = useParams(); // URL에서 ID 가져오기
+  const [notice, setNotice] = useState([]); // 공지사항 데이터 상태
+  const [delDialog, setDelDialog] = useState(false);
   const navigate = useNavigate();
 
-  const handleClickEdit = () => {
+  useEffect(() => {
+    const fetchNotice = async () => {
+      try {
+        const data = await fetchNoticeDetail(id); // API 호출
+        setNotice(data);
+      } catch (error) {
+        console.error("Error fetching notice:", error);
+      }
+    };
+
+    fetchNotice();
+  }, [id]);
+
+  const handleClickBack = () => {
     navigate(-1);
   };
+
+  const handleClickEdit = (noticeId) => {
+    navigate(`/noticeEdit/${noticeId}`);
+  };
+
+  const handleClickDel = () => {
+    setDelDialog(true);
+  };
+
+  const handleConfirmDel = async () => {
+    try {
+      // 삭제 API 호출
+      await deleteNotice([id]);
+      setDelDialog(false);
+      navigate(`/noticeList`);
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+    }
+  };
+
+  const handleClosekDel = () => {
+    setDelDialog(false);
+  };
+
+  const createdAt = notice.createdAt;
+  // createdAt가 유효한지 확인
+  const formattedDate = createdAt ? new Date(createdAt) : null;
+  const dateString =
+    formattedDate && !isNaN(formattedDate)
+      ? formattedDate.toISOString().split("T")[0]
+      : "Invalid Date"; // Fallback to "Invalid Date" if it's not valid
   return (
     <Root>
       <HeaderBox>
-        <ButtonStyle onClick={handleClickEdit} disableRipple>
+        <ButtonStyle onClick={handleClickBack} disableRipple>
           <ChevronLeftIcon />
           <Typography>목록</Typography>
         </ButtonStyle>
@@ -121,24 +170,43 @@ const NoticeView = () => {
       <TitleStyle>공지사항</TitleStyle>
 
       <DateBox>
-        <Typography>등록일: 2025.01.01</Typography>
+        <Typography>등록일: {dateString}</Typography>
       </DateBox>
 
       <BoxStyle>
-        <BoldStyle>제목이지롱</BoldStyle>
+        <BoldStyle>{notice.title}</BoldStyle>
         <ContnetsBox>
-          <img src={testImage} alt="이미지" />
-          <TextStyle>
-            내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱
-            내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱내용이지롱
-          </TextStyle>
+          {notice.imgurl !== null ? (
+            <img
+              src={`http://localhost:8066${notice.imgurl}`}
+              alt="공지 이미지"
+            />
+          ) : (
+            ""
+          )}
+
+          <TextStyle>{notice.content}</TextStyle>
         </ContnetsBox>
       </BoxStyle>
 
       <ButtonBox>
-        <CommonButton text="수정" />
-        <CommonButton bkColor={"red"} text="삭제" />
+        <CommonButton
+          onClick={() => handleClickEdit(notice.noticeNo)}
+          text="수정"
+        />
+        <CommonButton onClick={handleClickDel} bkColor={"red"} text="삭제" />
       </ButtonBox>
+
+      {delDialog && (
+        <CommonDialog
+          open={delDialog}
+          title={"공지사항 삭제"}
+          cancelBtn={true}
+          onClose={handleClosekDel}
+          onClick={handleConfirmDel}
+          children={<p>공지사항을 정말 삭제하시겠습니까?</p>}
+        />
+      )}
     </Root>
   );
 };

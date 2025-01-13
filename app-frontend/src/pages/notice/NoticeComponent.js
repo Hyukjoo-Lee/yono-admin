@@ -175,12 +175,12 @@ const NoticeComponent = () => {
     navigate("/noticeWrite");
   };
 
-  const handleClickView = () => {
-    navigate("/noticeView");
+  const handleClickView = (noticeId) => {
+    navigate(`/noticeView/${noticeId}`); // ID를 포함한 경로로 이동
   };
 
-  const handleClickEdit = () => {
-    navigate("/noticeEdit");
+  const handleClickEdit = (noticeId) => {
+    navigate(`/noticeEdit/${noticeId}`);
   };
 
   return (
@@ -245,7 +245,9 @@ const NoticeComponent = () => {
                           />
                         </TableCell>
                         <TableCell align="center">{item.noticeNo}</TableCell>
-                        <LinkTableCellStyle onClick={handleClickView}>
+                        <LinkTableCellStyle
+                          onClick={() => handleClickView(item.noticeNo)}
+                        >
                           {item.title}
                         </LinkTableCellStyle>
                         <TableCell align="center">
@@ -255,7 +257,10 @@ const NoticeComponent = () => {
                           {new Date(item.updatedAt).toISOString().split("T")[0]}
                         </TableCell>
                         <TableCell align="center">
-                          <CommonButton text="수정" onClick={handleClickEdit} />
+                          <CommonButton
+                            text="수정"
+                            onClick={() => handleClickEdit(item.noticeNo)}
+                          />
                         </TableCell>
                       </TableRow>
                     );

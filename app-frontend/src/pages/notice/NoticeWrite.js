@@ -40,8 +40,16 @@ const FlexBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
   justifyContent: "space-between",
   marginBottom: 16,
-  "& .MuiFormControl-root": {
-    width: "calc(100% - 120px) !important",
+}));
+
+const FlexBoxIn = styled(Box)(({ theme }) => ({
+  width: "calc(100% - 120px)",
+}));
+
+const ErrorText = styled(Typography)(({ theme }) => ({
+  "&.MuiTypography-root": {
+    fontSize: "0.875rem",
+    color: "red",
   },
 }));
 
@@ -69,7 +77,7 @@ const TextStyle = styled(Typography)(({ theme }) => ({
 }));
 
 const TextareaStyle = styled("textarea")(({ theme }) => ({
-  width: "calc(100% - 120px)",
+  width: "100%",
   borderRadius: 3,
   border: "1px solid rgba(0, 0, 0, 0.23)",
   outline: "none",
@@ -138,10 +146,21 @@ const NoticeWrite = () => {
   const [fileName, setFileName] = useState("");
   const [title, setTitle] = useState(""); // 제목 상태 추가
   const [content, setContent] = useState(""); // 내용 상태 추가
+  const [errors, setErrors] = useState({ title: false, content: false });
   const navigate = useNavigate();
 
-  const handleTitleChange = (event) => setTitle(event.target.value); // 제목 변경 핸들러
-  const handleContentChange = (event) => setContent(event.target.value); // 내용 변경 핸들러
+  const handleTitleChange = (event) => {
+    setTitle(event.target.value); // 제목 변경 핸들러
+    if (event.target.value.trim() !== "") {
+      setErrors((prev) => ({ ...prev, title: false }));
+    }
+  };
+  const handleContentChange = (event) => {
+    setContent(event.target.value); // 내용 변경 핸들러
+    if (event.target.value.trim() !== "") {
+      setErrors((prev) => ({ ...prev, content: false }));
+    }
+  };
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -152,8 +171,21 @@ const NoticeWrite = () => {
   };
 
   const handleSubmit = async () => {
+    const newErrors = {
+      title: title.trim() === "",
+      content: content.trim() === "",
+    };
+
+    setErrors(newErrors);
+
+    if (newErrors.title || newErrors.content) {
+      return;
+    }
+
     const formData = new FormData();
-    formData.append("file", file);
+    if (file) {
+      formData.append("file", file); // 파일이 있을 때만 추가
+    }
     formData.append("title", title);
     formData.append("content", content);
 
@@ -166,9 +198,17 @@ const NoticeWrite = () => {
     }
   };
 
+  const handleClickCancel = () => {
+    setTitle("");
+    setContent("");
+    setFile(null);
+    setFileName("");
+  };
+
   const handleClickEdit = () => {
     navigate(-1);
   };
+
   return (
     <Root>
       <HeaderBox>
@@ -182,24 +222,30 @@ const NoticeWrite = () => {
 
       <BoxStyle>
         <FlexBox>
-          <TextStyle>제목</TextStyle>
-          <CommonTextField
-            id={"title"}
-            name={"title"}
-            placeholder="제목을 입력하세요."
-            value={title}
-            onChange={handleTitleChange}
-          />
+          <TextStyle style={{ paddingBottom: 25 }}>제목</TextStyle>
+          <FlexBoxIn>
+            <CommonTextField
+              id={"title"}
+              name={"title"}
+              placeholder="제목을 입력하세요."
+              value={title}
+              onChange={handleTitleChange}
+            />
+            {errors.title && <ErrorText>제목을 입력해주세요.</ErrorText>}
+          </FlexBoxIn>
         </FlexBox>
 
         <FlexBox style={{ alignItems: "flex-start" }}>
           <TextStyle>내용</TextStyle>
-          <TextareaStyle
-            rows={20}
-            placeholder="내용을 입력하세요."
-            value={content}
-            onChange={handleContentChange} // 내용 입력 핸들러 연결
-          />
+          <FlexBoxIn>
+            <TextareaStyle
+              rows={20}
+              placeholder="내용을 입력하세요."
+              value={content}
+              onChange={handleContentChange} // 내용 입력 핸들러 연결
+            />
+            {errors.content && <ErrorText>내용을 입력해주세요.</ErrorText>}
+          </FlexBoxIn>
         </FlexBox>
 
         <UploadFlexBox>
@@ -209,7 +255,7 @@ const NoticeWrite = () => {
             name={"fileName"}
             placeholder="사진을 선택해주세요."
             value={fileName}
-            readOnly={true}
+            disabled={true}
           />
           <UploadButton
             component="label"
@@ -229,7 +275,7 @@ const NoticeWrite = () => {
 
       <ButtonBox>
         <CommonButton onClick={handleSubmit} text="등록" />
-        <CommonButton bkColor={"red"} text="취소" />
+        <CommonButton type="Reset" bkColor={"red"} text="취소" onClick={handleClickCancel} />
       </ButtonBox>
     </Root>
   );
