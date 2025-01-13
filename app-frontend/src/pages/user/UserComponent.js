@@ -33,9 +33,14 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
   "&.MuiTableBody-root": {
     "& .MuiTableRow-root": {
       "& .MuiTableCell-root": {
+        height: 68,
+        boxSizing: "border-box",
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
+      },
+      "& span": {
+        color: "red",
       },
       "& td:first-of-type": {
         borderRadius: "10px 0 0 10px",
@@ -68,6 +73,7 @@ const UserComponent = () => {
   const [selectedUserName, setSelectedUserName] = useState(""); // 선택된 유저 이름 상태 추가
   const [selectedUserNum, setSelectedUserNum] = useState("");
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [secession, setSecession] = useState(false); // 탈퇴 회원
 
   useEffect(() => {
     const getUsers = async () => {
@@ -155,6 +161,30 @@ const UserComponent = () => {
     return placeholders[selectValue] || "검색어를 입력해주세요.";
   };
 
+  // 체크박스 변경 시 탈퇴 회원만 보기 상태 업데이트
+  const handleSecessionChange = async (event) => {
+    const checked = event.target.checked; // 체크박스의 체크 여부
+
+    // secession 상태 업데이트
+    setSecession(checked);
+
+    // 체크박스가 체크되면 탈퇴 회원만 필터링, 아니면 전체 리스트로 복원
+    if (checked) {
+      const filteredList = list.filter((user) => user.state === 0); // 탈퇴 회원만 표시
+      setList(filteredList);
+    } else {
+      try {
+        const data = await fetchSearchResults("", ""); // API 호출
+        const sortedList = data.sort((a, b) => a.userNum - b.userNum).slice();
+        setList(sortedList); // 초기에는 전체 데이터를 표시
+      } catch (error) {
+        console.error("전체 데이터를 불러오지 못했습니다:", error);
+      } finally {
+        setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
+      }
+    }
+  };
+
   return (
     <Root>
       <CommonTitle icon={<GroupsIcon />} title={"회원 관리"} />
@@ -168,6 +198,8 @@ const UserComponent = () => {
         searchInput={searchInput} // 검색어 전달
         setSearchInput={setSearchInput}
         handleSearch={handleSearch}
+        secession={true}
+        handleSecessionChange={handleSecessionChange}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -192,13 +224,23 @@ const UserComponent = () => {
                         {new Date(item.createdAt).toISOString().split("T")[0]}
                       </TableCell>
                       <TableCell align="center">
-                        <CommonButton
-                          bkColor={"red"}
-                          text="탈퇴"
-                          onClick={() =>
-                            handleClickDel(item.name, item.userNum)
-                          }
-                        />
+                        {item.state === 0 ? (
+                          <span>
+                            {
+                              new Date(item.updatedAt)
+                                .toISOString()
+                                .split("T")[0]
+                            }
+                          </span>
+                        ) : (
+                          <CommonButton
+                            bkColor={"red"}
+                            text="탈퇴"
+                            onClick={() =>
+                              handleClickDel(item.name, item.userNum)
+                            }
+                          />
+                        )}
                       </TableCell>
                     </TableRow>
                   ))

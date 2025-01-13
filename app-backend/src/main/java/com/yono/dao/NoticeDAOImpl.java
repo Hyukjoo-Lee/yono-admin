@@ -1,6 +1,7 @@
 package com.yono.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -26,5 +27,15 @@ public class NoticeDAOImpl implements NoticeDAO {
     @Override
     public void saveNotice(NoticeVO notice) {
         noticeRepo.save(notice);
+    }
+
+    @Override
+    public NoticeVO findById(int id) {
+        return noticeRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public Optional<NoticeVO> findNoticeById(int id) {
+        return noticeRepo.findById(id); // ID로 조회
     }
 }

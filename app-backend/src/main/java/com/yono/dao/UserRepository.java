@@ -13,21 +13,18 @@ public interface UserRepository extends JpaRepository<UserVO, Integer> {
 
     @Query("SELECT u FROM UserVO u WHERE "
             + "((:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
-            + "LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%'))))"
-            + "AND u.state = 1")
+            + "LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
     List<UserVO> searchUsers(@Param("keyword") String keyword);
 
     @Query("SELECT u FROM UserVO u WHERE "
-            + "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')))"
-            + "AND u.state = 1")
+            + "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<UserVO> searchUsersByName(@Param("keyword") String keyword);
 
     @Query("SELECT u FROM UserVO u WHERE "
-            + "(:keyword IS NULL OR LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%')))"
-            + "AND u.state = 1")
+            + "(:keyword IS NULL OR LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%')))")
     List<UserVO> searchUsersById(@Param("keyword") String keyword);
 
     @Modifying
-    @Query("UPDATE UserVO u SET u.state = :state WHERE u.userNum = :userNum")
+    @Query("UPDATE UserVO u SET u.state = :state, u.updatedAt = CURRENT_TIMESTAMP WHERE u.userNum = :userNum")
     int delUserState(@Param("userNum") int userNum, @Param("state") int state);
 }

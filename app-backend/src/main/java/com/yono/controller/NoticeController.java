@@ -1,12 +1,13 @@
 package com.yono.controller;
 
-import java.io.IOException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,26 +43,28 @@ public class NoticeController {
 
     @PostMapping("/write")
     public ResponseEntity<Void> saveNotice(@ModelAttribute NoticeVO noticeVO,
-            @RequestParam("file") MultipartFile file) throws IOException {
+            @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String fileName = saveFile(file);  // 파일 저장 후 경로 반환
-            noticeVO.setAdminId("adminId");      // 관리자 아이디
             noticeVO.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
+        noticeVO.setUpdatedAt(null);
+        noticeVO.setAdminId("adminId");      // 관리자 아이디
         noticeService.saveNotice(noticeVO);     // 공지사항 저장
         return ResponseEntity.ok().build();
     }
 
     private String saveFile(MultipartFile file) throws IOException {
         // 애플리케이션 루트 디렉토리의 "resources" 폴더에 저장
-        String uploadFolder = System.getProperty("user.dir") + "/app-backend/src/main/resources/static/images"; // 실행 디렉토리 경로
+        File resourceDirectory = ResourceUtils.getFile("classpath:");
+        String uploadFolder = resourceDirectory.getPath() + "/static/images";
 
         // 현재 날짜로 디렉토리 생성
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH) + 1;
         int date = cal.get(Calendar.DATE);
-        String homedir = uploadFolder + "/" + year + month + date;
+        String homedir = uploadFolder + "/" + year + "-" + month + "-" + date;
 
         // 디렉토리가 없으면 생성
         File path = new File(homedir);
@@ -76,7 +79,7 @@ public class NoticeController {
         }
 
         // DB에 저장될 파일 경로 형식
-        String fileDBName = "/images/" + year + month + date + "/" + fileName;
+        String fileDBName = "/images/" + year + "-" + month + "-" + date + "/" + fileName;
 
         // 실제 저장할 경로
         File saveFile = new File(homedir + "/" + fileName);
@@ -89,6 +92,45 @@ public class NoticeController {
         }
 
         return fileDBName;  // DB에 저장할 경로 반환
+    }
+
+    @GetMapping("/detail")
+    public ResponseEntity<NoticeVO> getNoticeDetail(@RequestParam("id") int id) {
+        NoticeVO notice = noticeService.getNoticeById(id);
+        if (notice != null) {
+            return ResponseEntity.ok(notice);  // 공지사항이 있으면 반환
+        } else {
+            return ResponseEntity.notFound().build();  // 공지사항이 없으면 404 반환
+        }
+    }
+
+    @PostMapping("/edit")
+    public ResponseEntity<Void> editNotice(
+            @RequestParam("id") int id, // 수정할 공지사항 ID
+            @RequestParam("title") String title,
+            @RequestParam("content") String content,
+            @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+
+        // 기존 공지사항 조회
+        NoticeVO existingNotice = noticeService.getNoticeById(id);
+        if (existingNotice == null) {
+            return ResponseEntity.notFound().build(); // 수정 대상 없음
+        }
+
+        // 수정 데이터 반영
+        existingNotice.setTitle(title);
+        existingNotice.setContent(content);
+
+        if (file != null && !file.isEmpty()) {
+            String fileName = saveFile(file);  // 새 파일 저장 후 경로 반환
+            existingNotice.setImgurl(fileName); // 새 이미지 경로 저장
+        } else if (file == null) {
+            existingNotice.setImgurl(null); // 이미지 경로를 null로 설정
+        }
+
+        // 공지사항 저장
+        noticeService.saveNotice(existingNotice);
+        return ResponseEntity.ok().build();
     }
 
 }

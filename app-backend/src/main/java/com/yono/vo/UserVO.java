@@ -1,15 +1,16 @@
 package com.yono.vo;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -64,7 +65,14 @@ public class UserVO {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @UpdateTimestamp
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
+
+    @PreUpdate
+    public void preUpdate() {
+        // 상태가 변경되면 updatedAt이 자동으로 갱신됩니다.
+        if (this.state == 0) {
+            this.updatedAt = LocalDateTime.now();
+        }
+    }
 }

@@ -1,14 +1,18 @@
 package com.yono.vo;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -47,7 +51,22 @@ public class NoticeVO {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    @CreationTimestamp
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    public void prePersist() {
+        // 등록 시에는 updatedAt을 설정하지 않음
+        if (updatedAt == null) {
+            updatedAt = null;  // 명시적으로 null로 설정 (기본값이 null일 수도 있음)
+        }
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        // 수정 시에는 updatedAt을 현재 시간으로 설정
+        if (updatedAt == null) {
+            updatedAt = LocalDateTime.now();
+        }
+    }
 }

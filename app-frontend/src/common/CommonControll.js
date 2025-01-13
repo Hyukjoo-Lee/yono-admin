@@ -1,6 +1,6 @@
 import React from "react";
 import { styled } from "@mui/material/styles";
-import { Box } from "@mui/material";
+import { Box, Checkbox, FormControlLabel } from "@mui/material";
 import CommonButton from "./CommonButton";
 import CommonTextField from "./CommonTextField";
 import CommonSelect from "./CommonSelect";
@@ -26,6 +26,13 @@ const FlexBox = styled(Box)(({ theme }) => ({
   alignItems: "center",
 }));
 
+const SecessionBox = styled(Box)(({ theme }) => ({
+  "& .MuiTypography-root": {
+    fontWeight: "400",
+    fontSize: "1rem",
+  },
+}));
+
 const CommonControll = ({
   placeholder,
   buttonText,
@@ -39,6 +46,8 @@ const CommonControll = ({
   searchInput,
   setSearchInput,
   handleSearch,
+  secession,
+  handleSecessionChange,
 }) => {
   return (
     <Root>
@@ -64,6 +73,27 @@ const CommonControll = ({
         <CommonButton text={buttonText} onClick={handleSearch} />
       </SearchBoxStyle>
       <FlexBox>
+        {secession && (
+          <SecessionBox>
+            <FormControlLabel
+              value="secession"
+              control={
+                <Checkbox
+                  color="primary"
+                  onChange={handleSecessionChange}
+                  sx={{
+                    "&.Mui-checked": {
+                      color: "#4064e6",
+                    },
+                  }}
+                  disableRipple
+                />
+              }
+              label="탈퇴회원만 보기"
+              labelPlacement="end"
+            />
+          </SecessionBox>
+        )}
         {notice && (
           <div style={{ marginLeft: 8 }}>
             <CommonButton text="글쓰기" onClick={handleClickWrite} />

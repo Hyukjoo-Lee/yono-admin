@@ -254,7 +254,11 @@ const NoticeComponent = () => {
                           {new Date(item.createdAt).toISOString().split("T")[0]}
                         </TableCell>
                         <TableCell align="center">
-                          {new Date(item.updatedAt).toISOString().split("T")[0]}
+                          {item.updatedAt
+                            ? new Date(item.updatedAt)
+                                .toISOString()
+                                .split("T")[0]
+                            : ""}
                         </TableCell>
                         <TableCell align="center">
                           <CommonButton

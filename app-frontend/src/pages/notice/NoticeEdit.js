@@ -302,7 +302,7 @@ const NoticeEdit = () => {
 
       <BoxStyle>
         <FlexBox>
-          <TextStyle style={{ paddingBottom: 25 }}>제목</TextStyle>
+          <TextStyle style={!errors.title ? {  paddingBottom: 0 } : {paddingBottom: 25}}>제목</TextStyle>
           <FlexBoxIn>
             <CommonTextField
               id={"title"}

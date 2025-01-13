@@ -9,7 +9,7 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
       background: "#fff",
       borderBottom: "0",
       borderRadius: "10px !important",
-      padding: "24px 16px",
+      padding: "24px 16px !important",
     },
   },
 }));

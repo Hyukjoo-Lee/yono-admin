@@ -9,4 +9,6 @@ public interface NoticeService {
     List<NoticeVO> searchNotice(String keyword);
     void deleteByNotice (List<Integer> ids);
     void saveNotice(NoticeVO notice);
+    NoticeVO getNoticeById(int id); 
+    boolean updateNotice(NoticeVO noticeVO);
 }

@@ -222,7 +222,11 @@ const NoticeWrite = () => {
 
       <BoxStyle>
         <FlexBox>
-          <TextStyle style={{ paddingBottom: 25 }}>제목</TextStyle>
+          <TextStyle
+            style={!errors.title ? { paddingBottom: 0 } : { paddingBottom: 25 }}
+          >
+            제목
+          </TextStyle>
           <FlexBoxIn>
             <CommonTextField
               id={"title"}
@@ -275,7 +279,12 @@ const NoticeWrite = () => {
 
       <ButtonBox>
         <CommonButton onClick={handleSubmit} text="등록" />
-        <CommonButton type="Reset" bkColor={"red"} text="취소" onClick={handleClickCancel} />
+        <CommonButton
+          type="Reset"
+          bkColor={"red"}
+          text="취소"
+          onClick={handleClickCancel}
+        />
       </ButtonBox>
     </Root>
   );
