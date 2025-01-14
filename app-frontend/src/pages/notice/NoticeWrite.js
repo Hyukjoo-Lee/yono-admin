@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import CommonTextField from "../../common/CommonTextField";
 import CommonButton from "../../common/CommonButton";
 import { createNotice } from "../../apis/NoticeApi";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -73,6 +74,34 @@ const TextStyle = styled(Typography)(({ theme }) => ({
     width: 120,
     fontSize: "1.125rem",
     fontWeight: 500,
+  },
+}));
+
+const FileBox = styled(Box)(({ theme }) => ({
+  width: "calc(100% - 120px - 116px)",
+  height: 39,
+  display: "flex",
+  alignItems: "center",
+  border: "1px solid rgba(0, 0, 0, 0.23)",
+  boxSizing: "border-box",
+  borderRadius: 3,
+  padding: "8px 10px",
+  background: "#fff",
+  "& .MuiTypography-root": {
+    color: "#000",
+    opacity: 0.4,
+  },
+  "& .MuiButtonBase-root": {
+    minWidth: 30,
+    padding: 0,
+    "&:hover": {
+      background: "transparent",
+    },
+    "& svg": {
+      width: 20,
+      height: 20,
+      fill: "#4064e6",
+    },
   },
 }));
 
@@ -168,6 +197,8 @@ const NoticeWrite = () => {
       setFile(selectedFile);
       setFileName(selectedFile.name);
     }
+
+    event.target.value = "";
   };
 
   const handleSubmit = async () => {
@@ -207,6 +238,11 @@ const NoticeWrite = () => {
 
   const handleClickEdit = () => {
     navigate(-1);
+  };
+
+  const handleFileDelete = () => {
+    setFile(null); // 선택된 파일 초기화
+    setFileName("");
   };
 
   return (
@@ -254,13 +290,20 @@ const NoticeWrite = () => {
 
         <UploadFlexBox>
           <TextStyle>사진 첨부</TextStyle>
-          <CommonTextField
-            id={"fileName"}
-            name={"fileName"}
-            placeholder="사진을 선택해주세요."
-            value={fileName}
-            disabled={true}
-          />
+          <FileBox>
+            <Box>
+              {fileName ? (
+                <Typography>{fileName}</Typography>
+              ) : (
+                <Typography>사진을 선택해주세요.</Typography>
+              )}
+            </Box>
+            {fileName && (
+              <Button onClick={handleFileDelete}>
+                <CloseIcon />
+              </Button>
+            )}
+          </FileBox>
           <UploadButton
             component="label"
             role={undefined}

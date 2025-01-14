@@ -186,6 +186,7 @@ const NoticeEdit = () => {
         setNotice(data); // 공지사항 데이터 설정
         setTitle(data.title || ""); // 제목 초기값 설정
         setContent(data.content || ""); // 내용 초기값 설정
+        setFile(data.imgurl || null);
       } catch (error) {
         console.error("Error fetching notice:", error);
       }
@@ -193,6 +194,14 @@ const NoticeEdit = () => {
 
     fetchNotice();
   }, [id]);
+
+  useEffect(() => {
+    console.log("file state after delete:", file);
+  }, [file]); // file 상태가 변경될 때마다 실행
+
+  useEffect(() => {
+    console.log("notice imgurl after delete:", notice.imgurl);
+  }, [notice.imgurl]); // notice.imgurl 상태가 변경될 때마다 실행
 
   const handleTitleChange = (event) => {
     setTitle(event.target.value); // 제목 변경 핸들러
@@ -208,6 +217,15 @@ const NoticeEdit = () => {
     }
   };
 
+  const handleFileDelete = () => {
+    setFile(null); // 선택된 파일 초기화
+    setNotice((prev) => ({
+      ...prev,
+      imgurl: null, // 기존 이미지 경로를 null로 설정
+    }));
+
+  };
+
   const handleUpdate = async () => {
     const newErrors = {
       title: title.trim() === "",
@@ -220,24 +238,16 @@ const NoticeEdit = () => {
       return;
     }
 
-    // if (!title.trim()) {
-    //   setErrors((prev) => ({ ...prev, title: true }));
-    //   return;
-    // }
-    // if (!content.trim()) {
-    //   setErrors((prev) => ({ ...prev, content: true }));
-    //   return;
-    // }
-
     const formData = new FormData();
     formData.append("id", id); // 수정할 공지사항 ID
     formData.append("title", title);
     formData.append("content", content);
 
+    // 파일 정보 처리
     if (file) {
       formData.append("file", file); // 새 파일 추가
     } else {
-      formData.append("file", ""); // 빈 파일 정보 전송
+      formData.append("imgurl", ""); // 파일 삭제 시 imgurl 빈 값 전달
     }
 
     const success = await updateNotice(formData);
@@ -250,10 +260,11 @@ const NoticeEdit = () => {
 
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setFile(event.target.files[0]); // 선택된 파일 저장
+      const selectedFile = event.target.files[0];
+      setFile(selectedFile); // 선택된 파일 저장
       setNotice((prev) => ({
         ...prev,
-        imgurl: event.target.files[0].name, // UI에 선택한 파일명 표시
+        imgurl: selectedFile.name, // UI에 선택한 파일명 표시
       }));
     }
   };
@@ -277,14 +288,6 @@ const NoticeEdit = () => {
     navigate("/noticeList"); // 리스트 페이지로 이동
   };
 
-  const handleFileDelete = () => {
-    setFile(null); // 선택된 파일 초기화
-    setNotice((prev) => ({
-      ...prev,
-      imgurl: null, // 기존 이미지 경로를 null로 설정
-    }));
-  };
-
   const handleClickEdit = () => {
     navigate(-1);
   };
@@ -302,7 +305,11 @@ const NoticeEdit = () => {
 
       <BoxStyle>
         <FlexBox>
-          <TextStyle style={!errors.title ? {  paddingBottom: 0 } : {paddingBottom: 25}}>제목</TextStyle>
+          <TextStyle
+            style={!errors.title ? { paddingBottom: 0 } : { paddingBottom: 25 }}
+          >
+            제목
+          </TextStyle>
           <FlexBoxIn>
             <CommonTextField
               id={"title"}
@@ -352,7 +359,11 @@ const NoticeEdit = () => {
             disableRipple
           >
             사진 등록
-            <VisuallyHiddenInput type="file" onChange={handleFileChange} />
+            <VisuallyHiddenInput
+              id="file-input"
+              type="file"
+              onChange={handleFileChange}
+            />
           </UploadButton>
         </UploadFlexBox>
       </BoxStyle>

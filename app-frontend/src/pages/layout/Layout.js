@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { styled } from "@mui/material/styles";
 import SideBar from "../sidebar/SideBar";
 import Header from "../header/Header";
 import { drawerWidth, headerHeight } from "../../App";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Root = styled("div")(({ theme }) => ({
   "& p, input, div, button, th, td, textarea, label, span": {
@@ -46,22 +46,29 @@ const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
 
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(true);
-  const [menu, setMenu] = useState(() => {
-    // 새로고침 시 localStorage에서 menu 상태 복원
-    return localStorage.getItem("selectedMenu") || "";
-  });
+  const [menu, setMenu] = useState("");
+  const location = useLocation(); // 현재 URL 경로 가져오기
   const navigate = useNavigate();
-  const menuList = [
-    { title: "회원 관리", path: "/users" },
-    { title: "카드 관리", path: "/card" },
-    { title: "커뮤니티 관리", path: "/communityList" },
-    { title: "공지사항 관리", path: "/noticeList" },
-  ];
+
+  const menuList = useMemo(
+    () => [
+      { title: "회원 관리", path: "/users" },
+      { title: "카드 관리", path: "/card" },
+      { title: "커뮤니티 관리", path: "/communityList" },
+      { title: "공지사항 관리", path: "/noticeList" },
+    ],
+    [] // 의존성 배열이 빈 배열이므로 최초 렌더링 시 한 번만 생성됨
+  );
 
   useEffect(() => {
-    // menu 상태가 변경될 때 localStorage에 저장
-    localStorage.setItem("selectedMenu", menu);
-  }, [menu]);
+    const currentPath = location.pathname;
+    if (currentPath === "/") {
+      setMenu("");
+    } else {
+      const matchedMenu = menuList.find((item) => item.path === currentPath);
+      setMenu(matchedMenu ? matchedMenu.title : "");
+    }
+  }, [location.pathname, menuList]);
 
   const handleDrawerOpen = () => {
     setOpen(true);

@@ -109,7 +109,8 @@ public class NoticeController {
             @RequestParam("id") int id, // 수정할 공지사항 ID
             @RequestParam("title") String title,
             @RequestParam("content") String content,
-            @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestParam(value = "imgurl", required = false) String imgurl) throws IOException {
 
         // 기존 공지사항 조회
         NoticeVO existingNotice = noticeService.getNoticeById(id);
@@ -117,14 +118,18 @@ public class NoticeController {
             return ResponseEntity.notFound().build(); // 수정 대상 없음
         }
 
-        // 수정 데이터 반영
         existingNotice.setTitle(title);
         existingNotice.setContent(content);
 
+        System.out.println("===============================================");
+        System.out.println(file);
+
         if (file != null && !file.isEmpty()) {
-            String fileName = saveFile(file);  // 새 파일 저장 후 경로 반환
+            String fileName = saveFile(file); // 새 파일 저장
             existingNotice.setImgurl(fileName); // 새 이미지 경로 저장
-        } else if (file == null) {
+        } else {
+            System.out.println("============sdddddddddddd===================================");
+            System.out.println(file);
             existingNotice.setImgurl(null); // 이미지 경로를 null로 설정
         }
 

@@ -179,6 +179,7 @@ const UserComponent = () => {
         setList(sortedList); // 초기에는 전체 데이터를 표시
       } catch (error) {
         console.error("전체 데이터를 불러오지 못했습니다:", error);
+        console.log("탈퇴 회원 보기 상태:", secession);
       } finally {
         setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
       }
