@@ -178,6 +178,7 @@ const NoticeEdit = () => {
   const [errors, setErrors] = useState({ title: false, content: false });
   const navigate = useNavigate();
   const [delDialog, setDelDialog] = useState(false);
+  const [isImageDeleted, setIsImageDeleted] = useState(false); // 이미지 삭제 여부
 
   useEffect(() => {
     const fetchNotice = async () => {
@@ -195,14 +196,6 @@ const NoticeEdit = () => {
     fetchNotice();
   }, [id]);
 
-  useEffect(() => {
-    console.log("file state after delete:", file);
-  }, [file]); // file 상태가 변경될 때마다 실행
-
-  useEffect(() => {
-    console.log("notice imgurl after delete:", notice.imgurl);
-  }, [notice.imgurl]); // notice.imgurl 상태가 변경될 때마다 실행
-
   const handleTitleChange = (event) => {
     setTitle(event.target.value); // 제목 변경 핸들러
     if (event.target.value.trim() !== "") {
@@ -219,11 +212,8 @@ const NoticeEdit = () => {
 
   const handleFileDelete = () => {
     setFile(null); // 선택된 파일 초기화
-    setNotice((prev) => ({
-      ...prev,
-      imgurl: null, // 기존 이미지 경로를 null로 설정
-    }));
-
+    setNotice((prev) => ({ ...prev, imgurl: null })); // UI에서 이미지 제거
+    setIsImageDeleted(true); // 이미지 삭제 상태 설정
   };
 
   const handleUpdate = async () => {
@@ -246,8 +236,10 @@ const NoticeEdit = () => {
     // 파일 정보 처리
     if (file) {
       formData.append("file", file); // 새 파일 추가
+    } else if (isImageDeleted) {
+      formData.append("imgurl", ""); // 이미지 삭제 요청
     } else {
-      formData.append("imgurl", ""); // 파일 삭제 시 imgurl 빈 값 전달
+      formData.append("imgurl", notice.imgurl); // 기존 이미지 유지
     }
 
     const success = await updateNotice(formData);
@@ -261,12 +253,14 @@ const NoticeEdit = () => {
   const handleFileChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       const selectedFile = event.target.files[0];
-      setFile(selectedFile); // 선택된 파일 저장
+      setFile(selectedFile); // 새 파일 저장
       setNotice((prev) => ({
         ...prev,
         imgurl: selectedFile.name, // UI에 선택한 파일명 표시
       }));
+      setIsImageDeleted(false); // 이미지 삭제 상태 해제
     }
+    event.target.value = "";
   };
 
   const handleClickReset = () => {

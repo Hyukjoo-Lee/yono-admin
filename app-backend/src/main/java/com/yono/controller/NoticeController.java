@@ -121,16 +121,11 @@ public class NoticeController {
         existingNotice.setTitle(title);
         existingNotice.setContent(content);
 
-        System.out.println("===============================================");
-        System.out.println(file);
-
         if (file != null && !file.isEmpty()) {
             String fileName = saveFile(file); // 새 파일 저장
             existingNotice.setImgurl(fileName); // 새 이미지 경로 저장
-        } else {
-            System.out.println("============sdddddddddddd===================================");
-            System.out.println(file);
-            existingNotice.setImgurl(null); // 이미지 경로를 null로 설정
+        } else if (imgurl != null && imgurl.isEmpty()) {
+            existingNotice.setImgurl(null); // 이미지 삭제 요청 처리
         }
 
         // 공지사항 저장
