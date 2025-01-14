@@ -250,7 +250,7 @@ const NoticeWrite = () => {
       <HeaderBox>
         <ButtonStyle onClick={handleClickEdit} disableRipple>
           <ChevronLeftIcon />
-          <Typography>목록</Typography>
+          <Typography>이전</Typography>
         </ButtonStyle>
       </HeaderBox>
 
