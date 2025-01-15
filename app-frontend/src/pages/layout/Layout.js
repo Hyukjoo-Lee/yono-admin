@@ -16,33 +16,33 @@ const RootIn = styled("div")(({ theme }) => ({
   display: "flex",
 }));
 
-const Main = styled("main", { shouldForwardProp: (prop) => prop !== "open" })(
-  ({ theme }) => ({
-    flexGrow: 1,
-    padding: theme.spacing(3),
-    transition: theme.transitions.create("margin", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen,
-    }),
-    marginLeft: `-${drawerWidth}px`,
-    variants: [
-      {
-        props: ({ open }) => open,
-        style: {
-          transition: theme.transitions.create("margin", {
-            easing: theme.transitions.easing.easeOut,
-            duration: theme.transitions.duration.enteringScreen,
-          }),
-          marginLeft: 0,
-        },
+const Main = styled("main", {
+  shouldForwardProp: (prop) => prop !== "open" && prop !== "mainStyle",
+})(({ theme, mainStyle }) => ({
+  flexGrow: 1,
+  padding: mainStyle ? 0 : theme.spacing(3),
+  transition: theme.transitions.create("margin", {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: `-${drawerWidth}px`,
+  variants: [
+    {
+      props: ({ open }) => open,
+      style: {
+        transition: theme.transitions.create("margin", {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 0,
       },
-    ],
-    background: "#F7F7F8",
-    marginTop: `${headerHeight}px !important`,
-    minHeight: `calc(100vh - ${headerHeight}px)`,
-    boxSizing: "border-box",
-  })
-);
+    },
+  ],
+  background: mainStyle ? "#EFF3FD" : "#F7F7F8",
+  marginTop: `${headerHeight}px !important`,
+  minHeight: `calc(100vh - ${headerHeight}px)`,
+  boxSizing: "border-box",
+}));
 
 const Layout = ({ children }) => {
   const [open, setOpen] = useState(true);
@@ -100,7 +100,9 @@ const Layout = ({ children }) => {
           menu={menu}
           setMenu={setMenu}
         />
-        <Main open={open}>{children}</Main>
+        <Main mainStyle={location.pathname === "/"} open={open}>
+          {children}
+        </Main>
       </RootIn>
     </Root>
   );
