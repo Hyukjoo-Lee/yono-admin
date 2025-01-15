@@ -8,11 +8,11 @@ alter sequence notice_seq
 nocache;
 
 
-insert into notice (notice_no, title, admin_id, content, img_url, created_At, updated_At) 
-values (notice_seq.nextval, '공지입니다다.', 'jeId', '내용입니다.', '/images/image2.jpg', sysdate, sysdate);
+insert into notice (notice_no, title, admin_id, content, img_url, created_At) 
+values (notice_seq.nextval, '공지입니다다.', 'adminId', '내용입니다.', '/uploads/images/2025-1-15/image2.jpg', sysdate);
 
-insert into notice (notice_no, title, admin_id, content, img_url, created_At, updated_At) 
-values (notice_seq.nextval, '오픈했어어', 'jeId', '내용입니다.', '/images/image2.jpg', sysdate, sysdate);
+insert into notice (notice_no, title, admin_id, content, img_url, created_At) 
+values (notice_seq.nextval, '오픈했어어', 'adminId', '내용입니다.', '/uploads/images/2025-1-15/image2.jpg', sysdate);
 
 
 commit;

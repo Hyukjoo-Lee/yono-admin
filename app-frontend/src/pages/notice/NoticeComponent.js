@@ -84,7 +84,7 @@ const NoticeComponent = () => {
       setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
       try {
         const data = await fetchSearchNotice("", ""); // API 호출
-        const sortedList = data.sort((a, b) => a.noticeNo - b.noticeNo);
+        const sortedList = data.sort((a, b) => b.noticeNo - a.noticeNo);
         setList(sortedList); // 초기에는 전체 데이터를 표시
       } catch (error) {
         console.error("전체 데이터를 불러오지 못했습니다:", error);
@@ -128,7 +128,7 @@ const NoticeComponent = () => {
     setIsLoading(true);
     try {
       const data = await fetchSearchNotice(searchInput); // 검색 API 호출
-      const sortedList = data.sort((a, b) => a.noticeNo - b.noticeNo);
+      const sortedList = data.sort((a, b) => b.noticeNo - a.noticeNo);
       setList(sortedList); // 검색된 결과로 리스트 갱신
     } catch (error) {
       console.error("검색 데이터를 불러오지 못했습니다:", error);

@@ -109,7 +109,7 @@ public class NoticeController {
         try {
             file.transferTo(saveFile);  // 파일 저장
         } catch (Exception e) {
-            log.error("파일 저장 중 오류 발생", e);
+            e.printStackTrace();
         }
 
         return fileDBName;  // DB에 저장할 경로 반환
@@ -143,6 +143,11 @@ public class NoticeController {
         existingNotice.setContent(content);
 
         if (file != null && !file.isEmpty()) {
+            if ("deleted".equals(imgurl)) {
+                // 클라이언트가 이미지 삭제 요청 시
+                deleteFile(existingNotice.getImgurl());
+                existingNotice.setImgurl(null); // 이미지 경로를 null로 설정
+            }
             String fileName = saveFile(file); // 새 파일 저장
             existingNotice.setImgurl(fileName); // 새 이미지 경로 저장
         } else if (imgurl != null && imgurl.isEmpty()) {
