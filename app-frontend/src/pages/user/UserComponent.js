@@ -38,9 +38,9 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
-      },
-      "& span": {
-        color: "red",
+        "& span": {
+          color: "red",
+        },
       },
       "& td:first-of-type": {
         borderRadius: "10px 0 0 10px",

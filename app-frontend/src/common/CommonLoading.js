@@ -19,6 +19,9 @@ const TableRowStyle = styled(TableRow)(({ theme }) => ({
           background: "#fff",
           marginTop: 10,
         },
+        "& span": {
+          color: "#4064e6 !important",
+        },
       },
     },
   },

@@ -235,9 +235,15 @@ const NoticeEdit = () => {
 
     // 파일 정보 처리
     if (file) {
+      // 파일이 있을 때: 기존 이미지 삭제 후 새로운 이미지 추가
       formData.append("file", file); // 새 파일 추가
+
+      // 기존 이미지 삭제 요청 (만약 존재한다면)
+      if (notice.imgurl && isImageDeleted) {
+        formData.append("imgurl", "deleted"); // 기존 이미지 삭제 요청
+      }
     } else if (isImageDeleted) {
-      formData.append("imgurl", ""); // 이미지 삭제 요청
+      formData.append("imgurl", "deleted"); // 이미지 삭제 요청
     } else {
       formData.append("imgurl", notice.imgurl); // 기존 이미지 유지
     }
@@ -258,24 +264,15 @@ const NoticeEdit = () => {
         ...prev,
         imgurl: selectedFile.name, // UI에 선택한 파일명 표시
       }));
-      setIsImageDeleted(false); // 이미지 삭제 상태 해제
+      setIsImageDeleted(true); // 이미지 삭제 상태 해제
     }
     event.target.value = "";
   };
 
   const handleClickReset = () => {
-    const fetchNotice = async () => {
-      try {
-        const data = await fetchNoticeDetail(id); // API 호출
-        setNotice(data); // 공지사항 데이터 설정
-        setTitle(data.title); // 제목 초기값 설정
-        setContent(data.content); // 내용 초기값 설정
-      } catch (error) {
-        console.error("Error fetching notice:", error);
-      }
-    };
-
-    fetchNotice();
+    setTitle(notice.title); // 제목 초기화
+    setContent(notice.content); // 내용 초기화
+    setFile(notice.imgurl); // 이미지 초기화
     navigate("/noticeList");
   };
 

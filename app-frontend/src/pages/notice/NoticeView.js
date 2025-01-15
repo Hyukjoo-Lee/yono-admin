@@ -111,6 +111,8 @@ const NoticeView = () => {
   const [delDialog, setDelDialog] = useState(false);
   const navigate = useNavigate();
 
+  const baseURL = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
     const fetchNotice = async () => {
       try {
@@ -157,7 +159,8 @@ const NoticeView = () => {
   const dateString =
     formattedDate && !isNaN(formattedDate)
       ? formattedDate.toISOString().split("T")[0]
-      : "Invalid Date"; // Fallback to "Invalid Date" if it's not valid
+      : "날짜가 잘못됨";
+
   return (
     <Root>
       <HeaderBox>
@@ -177,10 +180,7 @@ const NoticeView = () => {
         <BoldStyle>{notice.title}</BoldStyle>
         <ContnetsBox>
           {notice.imgurl !== null ? (
-            <img
-              src={`http://localhost:8066${notice.imgurl}`}
-              alt="공지 이미지"
-            />
+            <img src={`${baseURL}${notice.imgurl}`} alt="공지 이미지" />
           ) : (
             ""
           )}
