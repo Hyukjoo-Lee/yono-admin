@@ -9,7 +9,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import { drawerWidth, headerHeight } from "../../App";
 import { ReactComponent as Logo } from "../../assets/images/Logo.svg";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import { Button } from "@mui/material";
 
 const DrawerHeader = styled("div")(({ theme }) => ({
@@ -77,10 +77,23 @@ const SideBar = ({
 }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClickLogo = () => {
     setMenu("");
     navigate("/");
+  };
+
+  // 현재 경로가 항목 경로와 일치하는지 확인
+  const isPathSelected = (itemPath) => {
+    if (itemPath.includes("/notice")) {
+      if (location.pathname.startsWith("/notice")) {
+        return true;
+      }
+    }
+
+    const match = matchPath(itemPath, location.pathname);
+    return match !== null;
   };
 
   return (
@@ -111,7 +124,7 @@ const SideBar = ({
       </DrawerHeader>
       <ListStyle>
         {menuList.map((item, index) => (
-          <ListItemStyle key={index} isSelect={menu === item.title}>
+          <ListItemStyle key={index} isSelect={isPathSelected(item.path)}>
             <ListItemButton
               onClick={() => handleClickMenu(item.title, item.path)}
               disableRipple
