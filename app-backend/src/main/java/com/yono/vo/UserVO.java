@@ -61,6 +61,9 @@ public class UserVO {
     @Column(name = "state")
     private int state; // 회원일때 1, 탈퇴회원 0
 
+    @Column(name = "user_role")
+    private int userRole; // 관리자 0, 회원 1
+
     @CreationTimestamp
     @Column(name = "created_at")
     private Timestamp createdAt;

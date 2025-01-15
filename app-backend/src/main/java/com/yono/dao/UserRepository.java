@@ -13,15 +13,18 @@ public interface UserRepository extends JpaRepository<UserVO, Integer> {
 
     @Query("SELECT u FROM UserVO u WHERE "
             + "((:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
-            + "LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
+            + "LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%'))))"
+            + " AND u.userRole = 1")
     List<UserVO> searchUsers(@Param("keyword") String keyword);
 
     @Query("SELECT u FROM UserVO u WHERE "
-            + "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+            + "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')))"
+            + " AND u.userRole = 1")
     List<UserVO> searchUsersByName(@Param("keyword") String keyword);
 
     @Query("SELECT u FROM UserVO u WHERE "
-            + "(:keyword IS NULL OR LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%')))")
+            + "(:keyword IS NULL OR LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%')))"
+            + " AND u.userRole = 1")
     List<UserVO> searchUsersById(@Param("keyword") String keyword);
 
     @Modifying
