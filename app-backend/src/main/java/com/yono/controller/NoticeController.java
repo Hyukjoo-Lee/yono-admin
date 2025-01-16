@@ -97,8 +97,8 @@ public class NoticeController {
         int random = r.nextInt(100000000);
         int index = fileName.lastIndexOf(".");
         String fileExtension = fileName.substring(index + 1);
-        String dataFileName = fileName.substring(0, fileName.length() - fileExtension.length() - 1);
-        String newFileName = dataFileName + year + month + date + random + "." + fileExtension;
+        String originalFileName = fileName.substring(0, fileName.length() - fileExtension.length() - 1);
+        String newFileName = originalFileName + year + month + date + random + "." + fileExtension;
         // DB에 저장될 파일 경로 형식
         String fileDBName = "/uploads/images/" + year + "-" + month + "-" + date + "/" + newFileName;
 
