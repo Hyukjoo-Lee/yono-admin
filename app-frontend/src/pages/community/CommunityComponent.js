@@ -39,14 +39,10 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
-        "&:first-of-type": {
-          width: 80,
-          boxSizing: "border-box",
-        },
+        boxSizing: "border-box",
       },
       "& td:first-of-type": {
         width: 80,
-        boxSizing: "border-box",
       },
       "& td:last-of-type": {
         borderRadius: "0 10px 10px 0",
@@ -66,7 +62,7 @@ const columns = [
 const CommunityComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selected, setSelected] = React.useState([]); // 체크박스
+  const [selected, setSelected] = useState([]); // 체크박스
   const [selectValue, setSelectValue] = useState("카테고리"); // 검색
   const [delDialog, setDelDialog] = useState(false);
   const [searchInput, setSearchInput] = useState(""); // 검색입력

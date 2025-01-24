@@ -96,7 +96,7 @@ const CommonControll = ({
         )}
         {notice && (
           <div style={{ marginLeft: 8 }}>
-            <CommonButton text="글쓰기" onClick={handleClickWrite} />
+            <CommonButton text="등록" onClick={handleClickWrite} />
           </div>
         )}
 

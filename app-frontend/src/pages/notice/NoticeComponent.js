@@ -38,12 +38,10 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
         padding: "12px 16px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
-        "&:first-of-type": {
-          width: 80,
-          boxSizing: "border-box",
-        },
+        boxSizing: "border-box",
       },
       "& td:first-of-type": {
+        width: 80,
         borderRadius: "10px 0 0 10px",
       },
       "& td:last-of-type": {
