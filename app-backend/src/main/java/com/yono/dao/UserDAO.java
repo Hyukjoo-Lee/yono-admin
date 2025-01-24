@@ -2,11 +2,12 @@ package com.yono.dao;
 
 import java.util.List;
 
-import com.yono.vo.UserVO;
+import com.yono.entity.UserEntity;
 
 public interface UserDAO {
-    List<UserVO> searchUsers(String keyword);
-    List<UserVO> searchUsersByName(String keyword);
-    List<UserVO> searchUsersById(String keyword);
+    List<UserEntity> searchUsers(String keyword);
+    List<UserEntity> searchUsersByName(String keyword);
+    List<UserEntity> searchUsersById(String keyword);
     int delUserState(int userNum, int state);
+    UserEntity findByUserId(String userId);
 }

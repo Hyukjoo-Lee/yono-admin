@@ -242,7 +242,7 @@ const CommunityComponent = () => {
                         <TableCell align="center">{item.no}</TableCell>
                         <TableCell align="center">{item.category}</TableCell>
                         <TableCell>{item.title}</TableCell>
-                        <TableCell align="center">{item.userid}</TableCell>
+                        <TableCell align="center">{item.userId}</TableCell>
                         <TableCell align="center">{item.regdate}</TableCell>
                       </TableRow>
                     );

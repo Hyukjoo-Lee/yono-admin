@@ -2,11 +2,11 @@ package com.yono.dao;
 
 import java.util.List;
 
-import com.yono.vo.CommunityVO;
+import com.yono.entity.CommunityEntity;
 
 public interface CommunityDAO {
-    List<CommunityVO> searchByCategory(String keyword);
-    List<CommunityVO> searchByName(String keyword);
-    List<CommunityVO> searchByTitle(String keyword);
+    List<CommunityEntity> searchByCategory(String keyword);
+    List<CommunityEntity> searchByName(String keyword);
+    List<CommunityEntity> searchByTitle(String keyword);
     void deleteByIds (List<Integer> ids);
 }

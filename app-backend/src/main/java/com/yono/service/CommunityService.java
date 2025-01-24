@@ -2,14 +2,14 @@ package com.yono.service;
 
 import java.util.List;
 
-import com.yono.vo.CommunityVO;
+import com.yono.dto.CommunityDTO;
 
 public interface CommunityService {
-    List<CommunityVO> searchByCategory(String keyword);
+    List<CommunityDTO> searchByCategory(String keyword);
 
-    List<CommunityVO> searchByName(String keyword);
+    List<CommunityDTO> searchByName(String keyword);
     
-    List<CommunityVO> searchByTitle (String keyword);
+    List<CommunityDTO> searchByTitle (String keyword);
 
     void deleteByIds (List<Integer> ids);
 }

@@ -7,27 +7,29 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.yono.vo.UserVO;
+import com.yono.entity.UserEntity;
 
-public interface UserRepository extends JpaRepository<UserVO, Integer> {
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
 
-    @Query("SELECT u FROM UserVO u WHERE "
+    @Query("SELECT u FROM UserEntity u WHERE "
             + "((:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
             + "LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%'))))"
             + " AND u.userRole = 1")
-    List<UserVO> searchUsers(@Param("keyword") String keyword);
+    List<UserEntity> searchUsers(@Param("keyword") String keyword);
 
-    @Query("SELECT u FROM UserVO u WHERE "
+    @Query("SELECT u FROM UserEntity u WHERE "
             + "(:keyword IS NULL OR LOWER(u.name) LIKE LOWER(CONCAT('%', :keyword, '%')))"
             + " AND u.userRole = 1")
-    List<UserVO> searchUsersByName(@Param("keyword") String keyword);
+    List<UserEntity> searchUsersByName(@Param("keyword") String keyword);
 
-    @Query("SELECT u FROM UserVO u WHERE "
+    @Query("SELECT u FROM UserEntity u WHERE "
             + "(:keyword IS NULL OR LOWER(u.userId) LIKE LOWER(CONCAT('%', :keyword, '%')))"
             + " AND u.userRole = 1")
-    List<UserVO> searchUsersById(@Param("keyword") String keyword);
+    List<UserEntity> searchUsersById(@Param("keyword") String keyword);
 
     @Modifying
-    @Query("UPDATE UserVO u SET u.state = :state, u.updatedAt = CURRENT_TIMESTAMP WHERE u.userNum = :userNum")
+    @Query("UPDATE UserEntity u SET u.state = :state, u.updatedAt = CURRENT_TIMESTAMP WHERE u.userNum = :userNum")
     int delUserState(@Param("userNum") int userNum, @Param("state") int state);
+
+    UserEntity findByUserId(String userId);
 }

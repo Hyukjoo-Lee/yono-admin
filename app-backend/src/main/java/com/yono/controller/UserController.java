@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yono.service.UserService;
-import com.yono.vo.UserVO;
+import com.yono.dto.UserDTO;
 
 @RestController
 @RequestMapping("/user")
@@ -22,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping("/list")
-    public List<UserVO> searchUsers(@RequestParam("keyword") String keyword, @RequestParam("selectValue") String selectValue) {
+    public List<UserDTO> searchUsers(@RequestParam("keyword") String keyword, @RequestParam("selectValue") String selectValue) {
         switch (selectValue) {
             case "전체":
                 return userService.searchUsers(keyword);

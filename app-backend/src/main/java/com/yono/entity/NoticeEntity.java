@@ -1,4 +1,4 @@
-package com.yono.vo;
+package com.yono.entity;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -10,6 +10,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
@@ -29,7 +31,7 @@ import lombok.ToString;
         allocationSize = 1
 )
 @Table(name = "notice")
-public class NoticeVO {
+public class NoticeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, // 사용할 전략을 시퀀스로 선택
@@ -39,8 +41,6 @@ public class NoticeVO {
 
     @Column(name = "title")
     private String title;
-    @Column(name = "admin_id")
-    private String adminId;
     @Column(name = "content")
     private String content;
     @Column(name = "img_url")
@@ -52,6 +52,13 @@ public class NoticeVO {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "user_num", referencedColumnName = "user_num")
+    private UserEntity userEntity;
+
+    @Column(name = "view_count", nullable = false, columnDefinition = "int default 0")
+    private int viewCount = 0;
 
     @PrePersist
     public void prePersist() {

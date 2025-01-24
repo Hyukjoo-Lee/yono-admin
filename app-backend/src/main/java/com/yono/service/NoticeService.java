@@ -2,13 +2,13 @@ package com.yono.service;
 
 import java.util.List;
 
-import com.yono.vo.NoticeVO;
+import com.yono.dto.NoticeDTO;
 
 public interface NoticeService {
     
-    List<NoticeVO> searchNotice(String keyword);
+    List<NoticeDTO> searchNotice(String keyword);
     void deleteByNotice (List<Integer> ids);
-    void saveNotice(NoticeVO notice);
-    NoticeVO getNoticeById(int id); 
-    boolean updateNotice(NoticeVO noticeVO);
+    void saveNotice(NoticeDTO notice);
+    NoticeDTO getNoticeById(int id); 
+    boolean updateNotice(NoticeDTO noticeDto);
 }

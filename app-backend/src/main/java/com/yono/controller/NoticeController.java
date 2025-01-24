@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yono.service.NoticeService;
-import com.yono.vo.NoticeVO;
+import com.yono.dto.NoticeDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,14 +31,14 @@ public class NoticeController {
     private NoticeService noticeService;
 
     @GetMapping("/list")
-    public List<NoticeVO> searchNotice(@RequestParam("keyword") String keyword) {
+    public List<NoticeDTO> searchNotice(@RequestParam("keyword") String keyword) {
         return noticeService.searchNotice(keyword);
     }
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteByNotice(@RequestBody List<Integer> ids) {
         for (Integer id : ids) {
-            NoticeVO notice = noticeService.getNoticeById(id);
+            NoticeDTO notice = noticeService.getNoticeById(id);
             if (notice != null && notice.getImgurl() != null) {
                 // 이미지 파일 삭제제
                 String filePath = System.getProperty("user.dir") + notice.getImgurl();
@@ -58,16 +58,16 @@ public class NoticeController {
     }
 
     @PostMapping("/write")
-    public ResponseEntity<Void> saveNotice(@ModelAttribute NoticeVO noticeVO,
+    public ResponseEntity<Void> saveNotice(@ModelAttribute NoticeDTO noticeDto,
             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
 
         if (file != null && !file.isEmpty()) {
             String fileName = saveFile(file);  // 파일 저장 후 경로 반환
-            noticeVO.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
+            noticeDto.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
-        noticeVO.setUpdatedAt(null);
-        noticeVO.setAdminId("adminId");  // 관리자 아이디
-        noticeService.saveNotice(noticeVO);     // 공지사항 저장
+        noticeDto.setUpdatedAt(null);
+        noticeDto.setUserId("adminId");  // 관리자 아이디
+        noticeService.saveNotice(noticeDto);     // 공지사항 저장
         return ResponseEntity.ok().build();
     }
 
@@ -116,8 +116,8 @@ public class NoticeController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<NoticeVO> getNoticeDetail(@RequestParam("id") int id) {
-        NoticeVO notice = noticeService.getNoticeById(id);
+    public ResponseEntity<NoticeDTO> getNoticeDetail(@RequestParam("id") int id) {
+        NoticeDTO notice = noticeService.getNoticeById(id);
         if (notice != null) {
             return ResponseEntity.ok(notice);  // 공지사항이 있으면 반환
         } else {
@@ -134,7 +134,7 @@ public class NoticeController {
             @RequestParam(value = "imgurl", required = false) String imgurl) throws IOException {
 
         // 기존 공지사항 조회
-        NoticeVO existingNotice = noticeService.getNoticeById(id);
+        NoticeDTO existingNotice = noticeService.getNoticeById(id);
         if (existingNotice == null) {
             return ResponseEntity.notFound().build(); // 수정 대상 없음
         }

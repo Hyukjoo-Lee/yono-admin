@@ -2,15 +2,18 @@ package com.yono.service;
 
 import java.util.List;
 
-import com.yono.vo.UserVO;
+import com.yono.dto.UserDTO;
+import com.yono.entity.UserEntity;
 
 public interface UserService {
 
-    List<UserVO> searchUsers(String keyword);
+    List<UserDTO> searchUsers(String keyword);
 
-    List<UserVO> searchUsersByName(String keyword);
+    List<UserDTO> searchUsersByName(String keyword);
     
-    List<UserVO> searchUsersById (String keyword);
+    List<UserDTO> searchUsersById (String keyword);
     
     int delUserState(int userNum, int state);
+
+    UserEntity findByUserId(String userId);
 }

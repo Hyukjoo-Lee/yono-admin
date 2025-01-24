@@ -8,12 +8,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yono.vo.NoticeVO;
+import com.yono.entity.NoticeEntity;
 
-public interface NoticeRepository extends JpaRepository<NoticeVO, Integer> {
-    @Query("SELECT n FROM NoticeVO n WHERE "
+public interface NoticeRepository extends JpaRepository<NoticeEntity, Integer> {
+    @Query("SELECT n FROM NoticeEntity n WHERE "
             + "(:keyword IS NULL OR LOWER(n.title) LIKE LOWER(CONCAT('%', :keyword, '%')))")
-    List<NoticeVO> searchNotice(@Param("keyword") String keyword);
+    List<NoticeEntity> searchNotice(@Param("keyword") String keyword);
 
     @Modifying
     @Transactional

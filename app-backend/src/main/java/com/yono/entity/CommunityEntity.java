@@ -1,4 +1,4 @@
-package com.yono.vo;
+package com.yono.entity;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -26,7 +28,7 @@ import lombok.ToString;
         allocationSize = 1
 )
 @Table(name = "tbl_posts")
-public class CommunityVO {
+public class CommunityEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, // 사용할 전략을 시퀀스로 선택
@@ -36,13 +38,14 @@ public class CommunityVO {
 
     private String title;
     private String category;
-    private String userid;
+
+
     private String content;
-
+    
     @CreationTimestamp
-    private LocalDate regdate;
+    private LocalDate  regdate;
 
-    private int viewcnt = 0;
+    private int viewcnt=0;
 
     private String imgurl;
 
@@ -51,4 +54,8 @@ public class CommunityVO {
 
     @CreationTimestamp
     private Timestamp updatedAt;
+    
+    @ManyToOne
+    @JoinColumn(name = "user_num", referencedColumnName ="user_num")
+    private UserEntity userEntity;
 }

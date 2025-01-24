@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yono.service.CommunityService;
-import com.yono.vo.CommunityVO;
+import com.yono.dto.CommunityDTO;
 
 @RestController
 @RequestMapping("/community")
@@ -22,7 +22,7 @@ public class CommunityController {
     private CommunityService communityService;
 
     @GetMapping("/list")
-    public List<CommunityVO> searchCommunuity(@RequestParam("keyword") String keyword, @RequestParam("selectValue") String selectValue) {
+    public List<CommunityDTO> searchCommunuity(@RequestParam("keyword") String keyword, @RequestParam("selectValue") String selectValue) {
         switch (selectValue) {
             case "카테고리":
                 return communityService.searchByCategory(keyword);

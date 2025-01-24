@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.yono.vo.CommunityVO;
+import com.yono.entity.CommunityEntity;
 
 @Repository
 public class CommunityDAOImpl implements CommunityDAO{
@@ -14,17 +14,17 @@ public class CommunityDAOImpl implements CommunityDAO{
     private CommunityRepository communityRepo;
 
     @Override
-    public List<CommunityVO> searchByCategory(String keyword) {
+    public List<CommunityEntity> searchByCategory(String keyword) {
         return communityRepo.searchByCategory(keyword);
     }
 
     @Override
-    public List<CommunityVO> searchByName(String keyword) {
+    public List<CommunityEntity> searchByName(String keyword) {
         return communityRepo.searchByName(keyword);
     }
 
     @Override
-    public List<CommunityVO> searchByTitle(String keyword) {
+    public List<CommunityEntity> searchByTitle(String keyword) {
         return communityRepo.searchByTitle(keyword);
     }
 

@@ -6,7 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.yono.vo.NoticeVO;
+import com.yono.entity.NoticeEntity;
 
 @Repository
 public class NoticeDAOImpl implements NoticeDAO {
@@ -15,7 +15,7 @@ public class NoticeDAOImpl implements NoticeDAO {
     private NoticeRepository noticeRepo;
 
     @Override
-    public List<NoticeVO> searchNotice(String keyword) {
+    public List<NoticeEntity> searchNotice(String keyword) {
         return noticeRepo.searchNotice(keyword);
     }
 
@@ -25,17 +25,17 @@ public class NoticeDAOImpl implements NoticeDAO {
     }
 
     @Override
-    public void saveNotice(NoticeVO notice) {
+    public void saveNotice(NoticeEntity notice) {
         noticeRepo.save(notice);
     }
 
     @Override
-    public NoticeVO findById(int id) {
+    public NoticeEntity findById(int id) {
         return noticeRepo.findById(id).orElse(null);
     }
 
     @Override
-    public Optional<NoticeVO> findNoticeById(int id) {
+    public Optional<NoticeEntity> findNoticeById(int id) {
         return noticeRepo.findById(id); // ID로 조회
     }
 }
