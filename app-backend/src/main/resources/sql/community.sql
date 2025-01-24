@@ -27,4 +27,4 @@ select * from tbl_posts;
 update tbl_posts set title = '가나다라' where no = 4;
 
 drop table tbl_posts;
-UPDATE tbl_posts SET user_num = 21 WHERE no = 7;
+UPDATE tbl_posts SET user_num = 21 WHERE no = 8;

@@ -56,6 +56,6 @@ public class CommunityEntity {
     private Timestamp updatedAt;
     
     @ManyToOne
-    @JoinColumn(name = "user_num", referencedColumnName ="user_num")
+    @JoinColumn(name = "user_id", referencedColumnName ="user_id")
     private UserEntity userEntity;
 }

@@ -12,7 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
-        String uploadDir = System.getProperty("user.dir") + "/uploads/images/";
+        String uploadDir = System.getProperty("user.dir").replace("\\app-backend", "") + "\\uploads\\images\\";
 
         try {    
             registry.addResourceHandler("/uploads/images/**")

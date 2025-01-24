@@ -41,7 +41,7 @@ public class NoticeController {
             NoticeDTO notice = noticeService.getNoticeById(id);
             if (notice != null && notice.getImgurl() != null) {
                 // 이미지 파일 삭제제
-                String filePath = System.getProperty("user.dir") + notice.getImgurl();
+                String filePath = System.getProperty("user.dir").replace("\\app-backend", "") + notice.getImgurl();
                 File file = new File(filePath);
                 if (file.exists()) {
                     if (file.delete()) {
@@ -72,7 +72,8 @@ public class NoticeController {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        String uploadFolder = System.getProperty("user.dir") + "/uploads/images";
+        String propertyPath = System.getProperty("user.dir").replace("\\app-backend", "");
+        String uploadFolder = propertyPath + "\\uploads\\images";
 
         // 현재 날짜로 디렉토리 생성
         Calendar cal = Calendar.getInstance();
@@ -167,7 +168,7 @@ public class NoticeController {
         if (filePath == null || filePath.isEmpty()) {
             return; // 경로가 없는 경우 아무것도 하지 않음
         }
-        String absolutePath = System.getProperty("user.dir") + filePath; // 절대 경로 생성
+        String absolutePath = System.getProperty("user.dir").replace("\\app-backend", "") + filePath; // 절대 경로 생성
         File file = new File(absolutePath);
         if (file.exists()) {
             if (file.delete()) {
