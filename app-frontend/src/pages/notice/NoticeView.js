@@ -143,7 +143,7 @@ const NoticeView = () => {
       // 삭제 API 호출
       await deleteNotice([id]);
       setDelDialog(false);
-      navigate(`/noticeList`);
+      navigate(`/noticeManagement`);
     } catch (error) {
       console.error("삭제 중 오류 발생:", error);
     }

@@ -273,11 +273,11 @@ const NoticeEdit = () => {
     setTitle(notice.title); // 제목 초기화
     setContent(notice.content); // 내용 초기화
     setFile(notice.imgurl); // 이미지 초기화
-    navigate("/noticeList");
+    navigate("/noticeManagement");
   };
 
   const handleCloseDialog = () => {
-    navigate("/noticeList"); // 리스트 페이지로 이동
+    navigate("/noticeManagement"); // 리스트 페이지로 이동
   };
 
   const handleClickEdit = () => {

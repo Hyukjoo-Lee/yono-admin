@@ -19,6 +19,7 @@ import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
 import CommonButton from "../../common/CommonButton";
 import cardImage from "../../assets/images/hana-kpass1.png";
+import { useNavigate } from "react-router-dom";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -82,6 +83,7 @@ const CardComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
+  const navigate = useNavigate();
 
   const [delDialog, setDelDialog] = useState(false);
 
@@ -117,6 +119,11 @@ const CardComponent = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const handleClickWrite = () => {
+    navigate("/cardWrite");
+  };
+
   const handleClickDel = () => {
     setDelDialog(true);
   };
@@ -133,6 +140,7 @@ const CardComponent = () => {
         buttonText={"검색"}
         delBtn={true}
         notice={true}
+        handleClickWrite={handleClickWrite}
         handleClickDel={handleClickDel}
       />
 

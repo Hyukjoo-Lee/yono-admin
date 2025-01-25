@@ -7,6 +7,7 @@ import CommonTextField from "../../common/CommonTextField";
 import CommonButton from "../../common/CommonButton";
 import { createNotice } from "../../apis/NoticeApi";
 import CloseIcon from "@mui/icons-material/Close";
+import CommonDialog from "../../common/CommonDialog";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -176,6 +177,7 @@ const NoticeWrite = () => {
   const [title, setTitle] = useState(""); // 제목 상태 추가
   const [content, setContent] = useState(""); // 내용 상태 추가
   const [errors, setErrors] = useState({ title: false, content: false });
+  const [delDialog, setDelDialog] = useState(false);
   const navigate = useNavigate();
 
   const handleTitleChange = (event) => {
@@ -223,10 +225,14 @@ const NoticeWrite = () => {
     try {
       const response = await createNotice(formData);
       console.log("Notice created successfully:", response);
-      navigate("/noticeList"); // 등록 후 목록 페이지로 이동
+      setDelDialog(true);
     } catch (error) {
       console.error("Error creating notice:", error);
     }
+  };
+
+  const handleCloseDialog = () => {
+    navigate("/noticeManagement"); // 리스트 페이지로 이동
   };
 
   const handleClickCancel = () => {
@@ -329,6 +335,16 @@ const NoticeWrite = () => {
           onClick={handleClickCancel}
         />
       </ButtonBox>
+
+      {delDialog && (
+        <CommonDialog
+          open={delDialog}
+          title={"공지사항 등록록"}
+          onClose={handleCloseDialog}
+          onClick={handleCloseDialog}
+          children={<p>공지사항이 등록록되었습니다.</p>}
+        />
+      )}
     </Root>
   );
 };

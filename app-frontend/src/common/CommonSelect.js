@@ -4,7 +4,7 @@ import { FormControl, Select, MenuItem } from "@mui/material";
 
 const FormControlStyle = styled(FormControl)(({ theme }) => ({
   "&.MuiFormControl-root": {
-    minWidth: 110,
+    minWidth: 120,
     "& .MuiInputBase-root": {
       borderRadius: 3,
       "& .MuiInputBase-input": {
@@ -40,7 +40,7 @@ const CommonSelect = ({ selectList, value, setValue }) => {
         onChange={handleChange}
       >
         {selectList.map((item, index) => (
-          <MenuItem key={index} value={item.label}>
+          <MenuItem key={index} value={item.label} disabled={item.disabled}>
             {item.label}
           </MenuItem>
         ))}

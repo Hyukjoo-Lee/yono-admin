@@ -4,6 +4,7 @@ import MainPage from "./pages/MainPage";
 import Layout from "./pages/layout/Layout";
 import UserComponent from "./pages/user/UserComponent";
 import CardComponent from "./pages/card/CardComponent";
+import CardWrite from "./pages/card/CardWrite";
 import CommunityComponent from "./pages/community/CommunityComponent";
 import NoticeComponent from "./pages/notice/NoticeComponent";
 import NoticeWrite from "./pages/notice/NoticeWrite";
@@ -20,9 +21,10 @@ function App() {
         <Routes>
           <Route path="/" element={<MainPage />} />
           <Route path="/users" element={<UserComponent />} />
-          <Route path="/card" element={<CardComponent />} />
-          <Route path="/communityList" element={<CommunityComponent />} />
-          <Route path="/noticeList" element={<NoticeComponent />} />
+          <Route path="/cardManagement" element={<CardComponent />} />
+          <Route path="/cardWrite" element={<CardWrite />} />
+          <Route path="/communityManagement" element={<CommunityComponent />} />
+          <Route path="/noticeManagement" element={<NoticeComponent />} />
           <Route path="/noticeWrite" element={<NoticeWrite />} />
           <Route path="/noticeEdit/:id" element={<NoticeEdit />} />
           <Route path="/noticeView/:id" element={<NoticeView />} />

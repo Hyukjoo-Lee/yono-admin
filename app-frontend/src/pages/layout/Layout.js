@@ -53,9 +53,9 @@ const Layout = ({ children }) => {
   const menuList = useMemo(
     () => [
       { title: "회원 관리", path: "/users" },
-      { title: "카드 관리", path: "/card" },
-      { title: "커뮤니티 관리", path: "/communityList" },
-      { title: "공지사항 관리", path: "/noticeList" },
+      { title: "카드 관리", path: "/cardManagement" },
+      { title: "커뮤니티 관리", path: "/communityManagement" },
+      { title: "공지사항 관리", path: "/noticeManagement" },
     ],
     [] // 의존성 배열이 빈 배열이므로 최초 렌더링 시 한 번만 생성됨
   );
