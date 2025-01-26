@@ -39,13 +39,12 @@ public class CommunityEntity {
     private String title;
     private String category;
 
-
     private String content;
-    
-    @CreationTimestamp
-    private LocalDate  regdate;
 
-    private int viewcnt=0;
+    @CreationTimestamp
+    private LocalDate regdate;
+
+    private int viewcnt = 0;
 
     private String imgurl;
 
@@ -54,8 +53,8 @@ public class CommunityEntity {
 
     @CreationTimestamp
     private Timestamp updatedAt;
-    
+
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName ="user_id")
+    @JoinColumn(name = "user_num", referencedColumnName = "user_num")
     private UserEntity userEntity;
 }

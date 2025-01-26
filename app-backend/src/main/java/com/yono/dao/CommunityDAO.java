@@ -9,4 +9,5 @@ public interface CommunityDAO {
     List<CommunityEntity> searchByName(String keyword);
     List<CommunityEntity> searchByTitle(String keyword);
     void deleteByIds (List<Integer> ids);
+    CommunityEntity findById(int id); 
 }

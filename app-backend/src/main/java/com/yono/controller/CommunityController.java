@@ -1,5 +1,6 @@
 package com.yono.controller;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yono.service.CommunityService;
 import com.yono.dto.CommunityDTO;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 
 @RestController
 @RequestMapping("/community")
@@ -37,6 +42,22 @@ public class CommunityController {
 
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteCommunityItems(@RequestBody List<Integer> ids) {
+        for (Integer id : ids) {
+            CommunityDTO community = communityService.getCommunityById(id);
+            if (community != null && community.getImgurl() != null) {
+                // 이미지 파일 삭제
+                String filePath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "") + "/uploads/images" + community.getImgurl();
+                File file = new File(filePath);
+                if (file.exists()) {
+                    if (file.delete()) {
+                        log.info("Deleted image file: " + filePath);
+                    } else {
+                        log.warn("Failed to delete image file: " + filePath);
+                    }
+                }
+            }
+        }
+
         communityService.deleteByIds(ids);
         return ResponseEntity.ok().build();
     }

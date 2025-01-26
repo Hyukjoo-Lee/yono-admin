@@ -48,6 +48,16 @@ public class CommunityServiceImpl implements CommunityService {
         communityDao.deleteByIds(ids);
     }
 
+    @Override
+    public CommunityDTO getCommunityById(int id) {
+        CommunityEntity communityEntity = communityDao.findById(id);
+        if (communityEntity == null) {
+            throw new RuntimeException("Community not found with ID: " + id);
+        }
+        // Entity -> DTO 변환
+        return toDto(communityEntity);
+    }
+
     // Entity -> DTO 변환
     private CommunityDTO toDto(CommunityEntity entity) {
         CommunityDTO dto = new CommunityDTO();

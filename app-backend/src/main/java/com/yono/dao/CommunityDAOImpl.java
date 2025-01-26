@@ -33,4 +33,8 @@ public class CommunityDAOImpl implements CommunityDAO{
         communityRepo.deleteByIds(ids);
     }
 
+    @Override
+    public CommunityEntity findById(int id) {
+        return communityRepo.findById(id).orElse(null);
+    }
 }

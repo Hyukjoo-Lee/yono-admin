@@ -12,4 +12,5 @@ public interface CommunityService {
     List<CommunityDTO> searchByTitle (String keyword);
 
     void deleteByIds (List<Integer> ids);
+    CommunityDTO getCommunityById(int id); 
 }
