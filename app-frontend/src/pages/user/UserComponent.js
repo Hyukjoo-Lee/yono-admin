@@ -57,8 +57,6 @@ const columns = [
   { id: "name", label: "이름", minWidth: 100, align: "center" },
   { id: "id", label: "아이디", minWidth: 100 },
   { id: "email", label: "이메일", minWidth: 170 },
-  { id: "address", label: "주소", minWidth: 170 },
-  { id: "detailAddress", label: "상세주소", minWidth: 170 },
   { id: "date", label: "가입일", minWidth: 100, align: "center" },
   { id: "delete", label: "탈퇴", minWidth: 100, align: "center" },
 ];
@@ -219,8 +217,6 @@ const UserComponent = () => {
                       <TableCell align="center">{item.name}</TableCell>
                       <TableCell>{item.userId}</TableCell>
                       <TableCell>{item.email}</TableCell>
-                      <TableCell>{item.address}</TableCell>
-                      <TableCell>{item.detailAddress}</TableCell>
                       <TableCell align="center">
                         {new Date(item.createdAt).toISOString().split("T")[0]}
                       </TableCell>

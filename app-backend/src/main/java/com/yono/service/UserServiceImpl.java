@@ -59,9 +59,6 @@ public class UserServiceImpl implements UserService {
         dto.setPassword(entity.getPassword());
         dto.setEmail(entity.getEmail());
         dto.setName(entity.getName());
-        dto.setAddress(entity.getAddress());
-        dto.setDetailAddress(entity.getDetailAddress());
-        dto.setPostcode(entity.getPostcode());
         dto.setSpendingTarget(entity.getSpendingTarget());
         dto.setProfile(entity.getProfile());
         dto.setState(entity.getState());
@@ -84,9 +81,6 @@ public class UserServiceImpl implements UserService {
         entity.setPassword(dto.getPassword());
         entity.setEmail(dto.getEmail());
         entity.setName(dto.getName());
-        entity.setAddress(dto.getAddress());
-        entity.setDetailAddress(dto.getDetailAddress());
-        entity.setPostcode(dto.getPostcode());
         entity.setSpendingTarget(dto.getSpendingTarget());
         entity.setProfile(dto.getProfile());
         entity.setState(dto.getState());

@@ -21,9 +21,6 @@ public class UserDTO {
     private String password;
     private String email;
     private String name;
-    private String address;
-    private String detailAddress;
-    private String postcode;
 
     private int spendingTarget = 0;
     private String profile = "temp_profile";
