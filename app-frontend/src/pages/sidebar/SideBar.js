@@ -92,6 +92,12 @@ const SideBar = ({
       }
     }
 
+    if (itemPath.includes("/card")) {
+      if (location.pathname.startsWith("/card")) {
+        return true;
+      }
+    }
+
     const match = matchPath(itemPath, location.pathname);
     return match !== null;
   };

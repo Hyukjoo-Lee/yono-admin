@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { styled } from "@mui/material/styles";
 import {
   Box,
@@ -18,8 +18,9 @@ import CommonTitle from "../../common/CommonTitle";
 import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
 import CommonButton from "../../common/CommonButton";
-import cardImage from "../../assets/images/hana-kpass1.png";
 import { useNavigate } from "react-router-dom";
+import { fetchSearchCard } from "../../apis/CardApi";
+import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({}));
 
@@ -34,6 +35,7 @@ const TableBodyStyle = styled(TableBody)(({ theme }) => ({
   "&.MuiTableBody-root": {
     "& .MuiTableRow-root": {
       "& .MuiTableCell-root": {
+        minHeight: 81,
         padding: "6px",
         background: "#fff",
         borderBottom: "6px solid #F7F7F8",
@@ -70,26 +72,36 @@ const columns = [
   { id: "edit", label: "", minWidth: 80, align: "center" },
 ];
 
-function createData(no, company, image, title) {
-  return { no, company, image, title };
-}
-const rows = [
-  createData(1, "현대", cardImage, "현대카드이름"),
-  createData(2, "현대", cardImage, "현대카드이름"),
-  createData(3, "현대", cardImage, "현대카드이름"),
-];
-
 const CardComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selected, setSelected] = useState([]);
+  const [searchInput, setSearchInput] = useState(""); // 검색입력
+  const [list, setList] = useState([]); // 현재 표시할 리스트
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
+  const [delDialog, setDelDialog] = useState(false);
   const navigate = useNavigate();
 
-  const [delDialog, setDelDialog] = useState(false);
+  useEffect(() => {
+    const fetchAllData = async () => {
+      setIsLoading(true); // 데이터 로드 시작 시 로딩 상태 true
+      try {
+        const data = await fetchSearchCard("", ""); // API 호출
+        const sortedList = data.sort((a, b) => b.cardId - a.cardId);
+        setList(sortedList); // 초기에는 전체 데이터를 표시
+      } catch (error) {
+        console.error("전체 데이터를 불러오지 못했습니다:", error);
+      } finally {
+        setIsLoading(false); // 데이터 로드 완료 후 로딩 상태 false
+      }
+    };
+
+    fetchAllData();
+  }, []);
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.no);
+      const newSelected = list.map((n) => n.cardId);
       setSelected(newSelected);
       return;
     }
@@ -112,6 +124,20 @@ const CardComponent = () => {
     }
     setSelected(newSelected);
   };
+
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchSearchCard(searchInput); // 검색 API 호출
+      const sortedList = data.sort((a, b) => b.cardId - a.cardId);
+      setList(sortedList); // 검색된 결과로 리스트 갱신
+    } catch (error) {
+      console.error("검색 데이터를 불러오지 못했습니다:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -127,6 +153,7 @@ const CardComponent = () => {
   const handleClickDel = () => {
     setDelDialog(true);
   };
+
   const handleClosekDel = () => {
     setDelDialog(false);
   };
@@ -142,6 +169,9 @@ const CardComponent = () => {
         notice={true}
         handleClickWrite={handleClickWrite}
         handleClickDel={handleClickDel}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        handleSearch={handleSearch}
       />
 
       <PaperStyle sx={{ width: "100%", overflow: "hidden" }}>
@@ -152,19 +182,21 @@ const CardComponent = () => {
               columns={columns}
               numSelected={selected.length}
               onSelectAllClick={handleSelectAllClick}
-              rowCount={rows.length}
+              rowCount={list.length}
             />
             <TableBodyStyle>
-              {rows.length !== 0 ? (
-                rows
+              {isLoading ? (
+                <CommonLoading colSpan={6} />
+              ) : list.length !== 0 ? (
+                list
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((item, index) => {
-                    const isItemSelected = selected.includes(item.no);
+                    const isItemSelected = selected.includes(item.cardId);
                     const labelId = `enhanced-table-checkbox-${index}`;
                     return (
                       <TableRow
                         hover
-                        key={item.no}
+                        key={item.cardId}
                         tabIndex={-1}
                         role="checkbox"
                         selected={isItemSelected}
@@ -173,7 +205,7 @@ const CardComponent = () => {
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
-                            onClick={(event) => handleClick(event, item.no)}
+                            onClick={(event) => handleClick(event, item.cardId)}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
@@ -185,11 +217,16 @@ const CardComponent = () => {
                             disableRipple
                           />
                         </TableCell>
-                        <TableCell align="center">{item.no}</TableCell>
-                        <TableCell align="center">{item.company}</TableCell>
+                        <TableCell align="center">{item.cardId}</TableCell>
+                        <TableCell align="center">
+                          {item.cardProvider}
+                        </TableCell>
                         <TableCellStyle>
-                          <img src={item.image} alt={item.title} />
-                          <span>{item.title}</span>
+                          <img
+                            src={`http://localhost:8066${item.cardImgUrl}`}
+                            alt={item.cardTitle}
+                          />
+                          <span>{item.cardTitle}</span>
                         </TableCellStyle>
                         <TableCell align="center">
                           <CommonButton text="수정" />
@@ -206,7 +243,7 @@ const CardComponent = () => {
         <TablePagination
           rowsPerPageOptions={[10, 25, 100]}
           component="div"
-          count={rows.length}
+          count={list.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
