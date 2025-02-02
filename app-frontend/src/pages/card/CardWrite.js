@@ -11,6 +11,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import CommonButton from "../../common/CommonButton";
 import cardImage from "../../assets/images/hana-kpass1.png";
 import CommonDialog from "../../common/CommonDialog";
+import { createCard } from "../../apis/CardApi";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -220,7 +221,9 @@ const ErrorText = styled(Typography)(({ theme }) => ({
 const CardComponent = () => {
   const navigate = useNavigate();
   const [selectValue, setSelectValue] = useState("카드사 선택"); // 카드사
-  const [cardName, setCardName] = useState("");
+  const [cardName, setCardName] = useState(""); // 카드 이름
+  const [isCardCreationSucceed, setIsCardCreationSucceed] = useState(false);
+  const [isCardCreationFailed, setIsCardCreationFailed] = useState(false);
   const [delDialog, setDelDialog] = useState(false);
   const [errors, setErrors] = useState({
     cardCompany: false,
@@ -239,20 +242,21 @@ const CardComponent = () => {
     },
   ]); // 카드 혜택 목록
 
-  const [imageList, setImageList] = useState([
-    { img: cardImage, text: "image_name.png" },
-  ]); // 카드 이미지 목록
+  const [imageList, setImageList] = useState([{ img: cardImage }]);
 
   const maxCheckboxCount = 4;
 
   const selectList = [
-    { label: "카드사 선택", disabled: true },
-    { label: "국민" },
-    { label: "현대" },
-    { label: "삼성" },
-    { label: "농협" },
-    { label: "신한" },
-    { label: "하나" },
+    {
+      label: "카드사 선택",
+      disabled: true,
+    },
+    { label: "국민", organizationCode: "0301", cardProvider: "kb" },
+    { label: "현대", organizationCode: "0302", cardProvider: "hyundai" },
+    { label: "삼성", organizationCode: "0303", cardProvider: "samsung" },
+    { label: "농협", organizationCode: "0304", cardProvider: "nh" },
+    { label: "신한", organizationCode: "0306", cardProvider: "shinhan" },
+    { label: "하나", organizationCode: "0313", cardProvider: "hana" },
   ];
 
   const cardTypeList = [
@@ -330,15 +334,54 @@ const CardComponent = () => {
       hasSelectedCompany && hasCardName && hasValidBenefits && hasCardImages
     );
   };
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      return;
+    }
 
-  const handleSubmit = () => {
-    if (validateForm()) {
-      setDelDialog(true);
+    const selectedCard = selectList.find((item) => item.label === selectValue);
+    const organizationCode = selectedCard ? selectedCard.organizationCode : "";
+    const cardProvider = selectedCard ? selectedCard.cardProvider : "";
+
+    const cardFormData = {
+      cardProvider: cardProvider,
+      cardTitle: cardName,
+      organizationCode: organizationCode,
+    };
+
+    const formData = new FormData();
+
+    formData.append("cardInfo", JSON.stringify(cardFormData));
+
+    const imageFiles = imageList.map((image) => image.file).filter(Boolean);
+
+    imageFiles.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    try {
+      const response = await createCard(formData);
+      setIsCardCreationSucceed(true);
+      console.log("카드 등록 성공:", response);
+    } catch (error) {
+      console.error("카드 등록 실패:", error);
+      setIsCardCreationFailed(true);
     }
   };
 
   const handleCloseDialog = () => {
     navigate("/cardManagement");
+  };
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const newImages = files.map((file) => ({
+      img: URL.createObjectURL(file),
+      text: file.name,
+      file: file,
+    }));
+
+    setImageList((prev) => [...prev, ...newImages]);
   };
 
   return (
@@ -488,15 +531,8 @@ const CardComponent = () => {
               <VisuallyHiddenInput
                 type="file"
                 accept="image/*"
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  if (file) {
-                    setImageList([
-                      ...imageList,
-                      { img: URL.createObjectURL(file), text: file.name },
-                    ]);
-                  }
-                }}
+                multiple
+                onChange={handleFileChange}
               />
             </UploadButton>
           </FlexBox>
