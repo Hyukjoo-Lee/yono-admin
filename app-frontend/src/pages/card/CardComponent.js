@@ -223,7 +223,7 @@ const CardComponent = () => {
                         </TableCell>
                         <TableCellStyle>
                           <img
-                            src={`http://localhost:8066${item.cardImgUrl}`}
+                            src={`http://localhost:8066${item.cardImgUrl?.split(",")[0]}`} // 첫 번째 이미지만 가져오기
                             alt={item.cardTitle}
                           />
                           <span>{item.cardTitle}</span>

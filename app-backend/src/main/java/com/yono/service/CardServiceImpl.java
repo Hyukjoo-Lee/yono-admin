@@ -29,16 +29,20 @@ public class CardServiceImpl implements CardService {
         if (entity == null) {
             return null;
         }
-
+    
         CardDTO dto = new CardDTO();
         dto.setCardId(entity.getCardId());
         dto.setCardTitle(entity.getCardTitle());
         dto.setCardProvider(entity.getCardProvider());
         dto.setOrganizationCode(entity.getOrganizationCode());
-        dto.setCardImgUrl(entity.getCardImgUrl());
+    
+        // , 기준으로 나눈 후 첫 번째 이미지 선택
+        String[] images = entity.getCardImgUrl().split(",");
+        dto.setCardImgUrl(images.length > 0 ? images[0] : null); 
+    
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
-
+    
         return dto;
     }
 }
