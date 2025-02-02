@@ -15,4 +15,6 @@ public interface CardRepository extends JpaRepository<CardEntity, Integer> {
             + "LOWER(u.cardTitle) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
     List<CardEntity> searchNotice(@Param("keyword") String keyword);
 
+    boolean existsByCardTitle(String cardTitle);
+
 }
