@@ -23,3 +23,9 @@ export const createCard = async (cardInfo) => {
     }
   }
 };
+
+// 카드 삭제
+export const deleteCardItems = async (ids) => {
+  const response = await axios.post("/card/delete", ids);
+  return response.data;
+};

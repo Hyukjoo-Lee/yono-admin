@@ -338,7 +338,7 @@ const CardComponent = () => {
     if (!validateForm()) {
       return;
     }
-
+    setIsLoading(true);
     const selectedCard = selectList.find((item) => item.label === selectValue);
     const organizationCode = selectedCard ? selectedCard.organizationCode : "";
     const cardProvider = selectedCard ? selectedCard.cardProvider : "";
@@ -365,7 +365,6 @@ const CardComponent = () => {
       console.log("카드 등록 성공:", response);
     } catch (error) {
       console.error("카드 등록 실패:", error);
-      setIsCardCreationFailed(true);
     }
   };
 
@@ -384,6 +383,9 @@ const CardComponent = () => {
     setImageList((prev) => [...prev, ...newImages]);
   };
 
+  const handleCancle = () => {
+    navigate(-1);
+  };
   return (
     <Root>
       <HeaderBox>

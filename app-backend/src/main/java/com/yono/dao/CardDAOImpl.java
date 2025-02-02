@@ -11,21 +11,31 @@ import com.yono.entity.CardEntity;
 public class CardDAOImpl implements CardDAO {
 
     @Autowired
-    private CardRepository CardRepo;
+    private CardRepository cardRepo;
 
     @Override
     public List<CardEntity> searchNotice(String keyword) {
-        return CardRepo.searchNotice(keyword);
+        return cardRepo.searchNotice(keyword);
     }
 
     @Override
     public void createCard(CardEntity cardEntity) {
-        CardRepo.save(cardEntity);
+        cardRepo.save(cardEntity);
     }
 
     @Override
     public boolean existsByCardTitle(String cardTitle) {
-        return CardRepo.existsByCardTitle(cardTitle);
+        return cardRepo.existsByCardTitle(cardTitle);
+    }
+
+    @Override
+    public void deleteByIds(List<Integer> ids) {
+        cardRepo.deleteByIds(ids);
+    }
+
+    @Override
+    public CardEntity findById(Integer id) {
+        return cardRepo.findById(id).orElse(null);
     }
 
 }

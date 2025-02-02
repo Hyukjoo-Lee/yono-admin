@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +58,39 @@ public class CardController {
 
         CardDTO createdCard = cardService.createCard(cardDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCard);
+    }
+
+    @PostMapping("/delete")
+    public ResponseEntity<Void> deleteCardItems(@RequestBody List<Integer> ids) {
+        for (Integer id : ids) {
+            CardDTO cardDTO = cardService.getCardById(id);
+            if (cardDTO != null && cardDTO.getCardImgUrl() != null) {
+                System.out.println("cardUrl: " + cardDTO.getCardImgUrl());
+
+                // 현재 실행 중인 프로젝트의 루트 경로
+                String projectPath = System.getProperty("user.dir")
+                        .replace("\\app-backend", "") // 윈도우 경로 처리
+                        .replace("/app-backend", ""); // 리눅스/맥 경로 처리
+
+                String filePath = projectPath + cardDTO.getCardImgUrl();
+
+                System.out.println("filePath: " + filePath);
+
+                File file = new File(filePath);
+                if (file.exists()) {
+                    if (file.delete()) {
+                        System.out.println("카드 삭제 완료: " + filePath);
+                    } else {
+                        System.out.println("카드 삭제 실패: " + filePath);
+                    }
+                } else {
+                    System.out.println("파일을 찾을 수 없습니다.");
+                }
+            }
+        }
+
+        cardService.deleteByIds(ids);
+        return ResponseEntity.ok().build();
     }
 
     // 이미지 파일 저장
