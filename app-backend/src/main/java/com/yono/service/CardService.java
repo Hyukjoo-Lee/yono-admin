@@ -6,4 +6,6 @@ import com.yono.dto.CardDTO;
 
 public interface CardService {
     List<CardDTO> searchNotice(String keyword);
+
+    CardDTO createCard(CardDTO cardDTO);
 }

@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yono.dao.NoticeDAO;
 import com.yono.dto.NoticeDTO;
-import com.yono.service.UserService;
 import com.yono.entity.NoticeEntity;
 
 @Service

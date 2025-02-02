@@ -6,4 +6,8 @@ import com.yono.entity.CardEntity;
 
 public interface CardDAO {
     List<CardEntity> searchNotice(String keyword);
+
+    boolean existsByCardTitle(String cardTitle);
+
+    void createCard(CardEntity cardEntity);
 }

@@ -1,6 +1,5 @@
 package com.yono.service;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,7 +12,7 @@ import com.yono.entity.CardEntity;
 
 @Service
 public class CardServiceImpl implements CardService {
-    
+
     @Autowired
     private CardDAO cardDao;
 
@@ -22,6 +21,17 @@ public class CardServiceImpl implements CardService {
         // Entity -> DTO 변환
         List<CardEntity> entities = cardDao.searchNotice(keyword);
         return entities.stream().map(this::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public CardDTO createCard(CardDTO cardDTO) {
+        if (cardDao.existsByCardTitle(cardDTO.getCardTitle())) {
+            throw new IllegalArgumentException("이미 존재하는 카드이름입니다.");
+        }
+
+        CardEntity cardEntity = toEntity(cardDTO);
+        cardDao.createCard(cardEntity);
+        return toDto(cardEntity);
     }
 
     // Entity -> DTO 변환
@@ -44,5 +54,18 @@ public class CardServiceImpl implements CardService {
         dto.setUpdatedAt(entity.getUpdatedAt());
     
     return dto; 
+    }
+
+    // DTO -> Entity 변환
+    private CardEntity toEntity(CardDTO dto) {
+        CardEntity entity = new CardEntity();
+        entity.setCardId(dto.getCardId());
+        entity.setCardTitle(dto.getCardTitle());
+        entity.setCardProvider(dto.getCardProvider());
+        entity.setOrganizationCode(dto.getOrganizationCode());
+        entity.setCardImgUrl(dto.getCardImgUrl());
+        entity.setCreatedAt(dto.getCreatedAt());
+        entity.setUpdatedAt(dto.getUpdatedAt());
+        return entity;
     }
 }
