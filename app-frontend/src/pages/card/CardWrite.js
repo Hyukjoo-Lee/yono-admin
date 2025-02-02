@@ -9,9 +9,9 @@ import CommonTextField from "../../common/CommonTextField";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
 import CommonButton from "../../common/CommonButton";
-import cardImage from "../../assets/images/hana-kpass1.png";
 import CommonDialog from "../../common/CommonDialog";
 import { createCard } from "../../apis/CardApi";
+import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({
   width: "100%",
@@ -222,8 +222,7 @@ const CardComponent = () => {
   const navigate = useNavigate();
   const [selectValue, setSelectValue] = useState("카드사 선택"); // 카드사
   const [cardName, setCardName] = useState(""); // 카드 이름
-  const [isCardCreationSucceed, setIsCardCreationSucceed] = useState(false);
-  const [isCardCreationFailed, setIsCardCreationFailed] = useState(false);
+
   const [delDialog, setDelDialog] = useState(false);
   const [errors, setErrors] = useState({
     cardCompany: false,
@@ -242,7 +241,9 @@ const CardComponent = () => {
     },
   ]); // 카드 혜택 목록
 
-  const [imageList, setImageList] = useState([{ img: cardImage }]);
+  const [imageList, setImageList] = useState([]);
+
+  const [isLoading, setIsLoading] = useState(false);
 
   const maxCheckboxCount = 4;
 
@@ -361,11 +362,13 @@ const CardComponent = () => {
 
     try {
       const response = await createCard(formData);
-      setIsCardCreationSucceed(true);
+
+      setDelDialog(true);
       console.log("카드 등록 성공:", response);
+
+      resetForm();
     } catch (error) {
       console.error("카드 등록 실패:", error);
-      setIsCardCreationFailed(true);
     }
   };
 
@@ -384,193 +387,229 @@ const CardComponent = () => {
     setImageList((prev) => [...prev, ...newImages]);
   };
 
+  const resetForm = () => {
+    setSelectValue("카드사 선택");
+    setCardName("");
+    setBenefits([
+      {
+        id: Date.now(),
+        checked: false,
+        cardType: "가맹점 선택",
+        benefit: "",
+        description: "",
+      },
+    ]);
+    setImageList([]);
+    setErrors({
+      cardCompany: false,
+      cardName: false,
+      cardBenefits: false,
+      cardImages: false,
+    });
+  };
+
   return (
     <Root>
-      <HeaderBox>
-        <ButtonStyle onClick={handleClickEdit} disableRipple>
-          <ChevronLeftIcon />
-          <Typography>이전</Typography>
-        </ButtonStyle>
-      </HeaderBox>
-      <Titlestyle>카드 등록</Titlestyle>
-      <BoxStyle>
-        <FlexBox>
-          <TextStyle
-            style={
-              !errors.cardCompany ? { paddingBottom: 0 } : { paddingBottom: 25 }
-            }
-          >
-            카드사
-          </TextStyle>
-          <div>
-            <CommonSelect
-              selectList={selectList}
-              value={selectValue}
-              setValue={setSelectValue}
-            />
-            {errors.cardCompany && (
-              <ErrorText>카드사를 선택해주세요.</ErrorText>
-            )}
-          </div>
-        </FlexBox>
-
-        <FlexBox>
-          <TextStyle
-            style={
-              !errors.cardName ? { paddingBottom: 0 } : { paddingBottom: 25 }
-            }
-          >
-            카드 이름
-          </TextStyle>
-          <CardNameBox>
-            <CommonTextField
-              placeholder={"카드 이름을 입력해주세요."}
-              value={cardName}
-              onChange={(e) => setCardName(e.target.value)}
-            />
-            {errors.cardName && (
-              <ErrorText>카드 이름을 입력해주세요.</ErrorText>
-            )}
-          </CardNameBox>
-        </FlexBox>
-
-        <BoxInStyle>
-          <TextStyle
-            style={!errors.title ? { paddingBottom: 0 } : { paddingBottom: 25 }}
-          >
-            카드 혜택
-          </TextStyle>
-          <BoxList>
-            {benefits.map((benefit, index) => (
-              <FlexBox key={benefit.id}>
-                <Checkbox
-                  color="primary"
-                  checked={benefit.checked}
-                  onChange={() => handleCheckboxChange(benefit.id)}
-                  sx={{
-                    "&.Mui-checked": {
-                      color: "#4064e6",
-                    },
-                  }}
-                  disableRipple
-                />
+      {isLoading ? (
+        <CommonLoading colSpan={8} />
+      ) : (
+        <>
+          <HeaderBox>
+            <ButtonStyle onClick={handleClickEdit} disableRipple>
+              <ChevronLeftIcon />
+              <Typography>이전</Typography>
+            </ButtonStyle>
+          </HeaderBox>
+          <Titlestyle>카드 등록</Titlestyle>
+          <BoxStyle>
+            <FlexBox>
+              <TextStyle
+                style={
+                  !errors.cardCompany
+                    ? { paddingBottom: 0 }
+                    : { paddingBottom: 25 }
+                }
+              >
+                카드사
+              </TextStyle>
+              <div>
                 <CommonSelect
-                  selectList={cardTypeList}
-                  value={benefit.cardType}
-                  setValue={(value) =>
-                    setBenefits(
-                      benefits.map((b) =>
-                        b.id === benefit.id ? { ...b, cardType: value } : b
-                      )
-                    )
-                  }
+                  selectList={selectList}
+                  value={selectValue}
+                  setValue={setSelectValue}
                 />
-                <TextFieldBox>
-                  <CommonTextField
-                    placeholder={"카드혜택을 입력해주세요."}
-                    value={benefit.benefit}
-                    onChange={(e) =>
-                      setBenefits(
-                        benefits.map((b) =>
-                          b.id === benefit.id
-                            ? { ...b, benefit: e.target.value }
-                            : b
-                        )
-                      )
-                    }
-                  />
-                  <CommonTextField
-                    placeholder={"혜택 부가설명"}
-                    value={benefit.description}
-                    onChange={(e) =>
-                      setBenefits(
-                        benefits.map((b) =>
-                          b.id === benefit.id
-                            ? { ...b, description: e.target.value }
-                            : b
-                        )
-                      )
-                    }
-                  />
-                </TextFieldBox>
-                {index === 0 ? (
-                  <IconButtonStyle onClick={handleAddBenefit} disableRipple>
-                    <AddIcon />
-                  </IconButtonStyle>
-                ) : (
-                  <>
-                    <IconButtonStyle onClick={handleAddBenefit} disableRipple>
-                      <AddIcon />
-                    </IconButtonStyle>
-                    <MinusIconButtonStyle
-                      onClick={() => handleRemoveBenefit(benefit.id)}
-                      disableRipple
-                    >
-                      <RemoveIcon />
-                    </MinusIconButtonStyle>
-                  </>
+                {errors.cardCompany && (
+                  <ErrorText>카드사를 선택해주세요.</ErrorText>
                 )}
-              </FlexBox>
-            ))}
-            {errors.cardBenefits && (
-              <ErrorText>카드 혜택은 한개 이상 입력해주세요.</ErrorText>
-            )}
-          </BoxList>
-        </BoxInStyle>
+              </div>
+            </FlexBox>
 
-        <Box>
-          <FlexBox>
-            <TextStyle>카드 이미지</TextStyle>
-            <UploadButton
-              component="label"
-              role={undefined}
-              variant="contained"
-              disableRipple
-            >
-              카드이미지 등록
-              <VisuallyHiddenInput
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-              />
-            </UploadButton>
-          </FlexBox>
+            <FlexBox>
+              <TextStyle
+                style={
+                  !errors.cardName
+                    ? { paddingBottom: 0 }
+                    : { paddingBottom: 25 }
+                }
+              >
+                카드 이름
+              </TextStyle>
+              <CardNameBox>
+                <CommonTextField
+                  placeholder={"카드 이름을 입력해주세요."}
+                  value={cardName}
+                  onChange={(e) => setCardName(e.target.value)}
+                />
+                {errors.cardName && (
+                  <ErrorText>카드 이름을 입력해주세요.</ErrorText>
+                )}
+              </CardNameBox>
+            </FlexBox>
 
-          <ImageBox>
-            {imageList.map((item, index) => (
-              <PositionBox key={index}>
-                <CloseIconButtonStyle
-                  onClick={() =>
-                    setImageList(imageList.filter((_, i) => i !== index))
-                  }
+            <BoxInStyle>
+              <TextStyle
+                style={
+                  !errors.title ? { paddingBottom: 0 } : { paddingBottom: 25 }
+                }
+              >
+                카드 혜택
+              </TextStyle>
+              <BoxList>
+                {benefits.map((benefit, index) => (
+                  <FlexBox key={benefit.id}>
+                    <Checkbox
+                      color="primary"
+                      checked={benefit.checked}
+                      onChange={() => handleCheckboxChange(benefit.id)}
+                      sx={{
+                        "&.Mui-checked": {
+                          color: "#4064e6",
+                        },
+                      }}
+                      disableRipple
+                    />
+                    <CommonSelect
+                      selectList={cardTypeList}
+                      value={benefit.cardType}
+                      setValue={(value) =>
+                        setBenefits(
+                          benefits.map((b) =>
+                            b.id === benefit.id ? { ...b, cardType: value } : b
+                          )
+                        )
+                      }
+                    />
+                    <TextFieldBox>
+                      <CommonTextField
+                        placeholder={"카드혜택을 입력해주세요."}
+                        value={benefit.benefit}
+                        onChange={(e) =>
+                          setBenefits(
+                            benefits.map((b) =>
+                              b.id === benefit.id
+                                ? { ...b, benefit: e.target.value }
+                                : b
+                            )
+                          )
+                        }
+                      />
+                      <CommonTextField
+                        placeholder={"혜택 부가설명"}
+                        value={benefit.description}
+                        onChange={(e) =>
+                          setBenefits(
+                            benefits.map((b) =>
+                              b.id === benefit.id
+                                ? { ...b, description: e.target.value }
+                                : b
+                            )
+                          )
+                        }
+                      />
+                    </TextFieldBox>
+                    {index === 0 ? (
+                      <IconButtonStyle onClick={handleAddBenefit} disableRipple>
+                        <AddIcon />
+                      </IconButtonStyle>
+                    ) : (
+                      <>
+                        <IconButtonStyle
+                          onClick={handleAddBenefit}
+                          disableRipple
+                        >
+                          <AddIcon />
+                        </IconButtonStyle>
+                        <MinusIconButtonStyle
+                          onClick={() => handleRemoveBenefit(benefit.id)}
+                          disableRipple
+                        >
+                          <RemoveIcon />
+                        </MinusIconButtonStyle>
+                      </>
+                    )}
+                  </FlexBox>
+                ))}
+                {errors.cardBenefits && (
+                  <ErrorText>카드 혜택은 한개 이상 입력해주세요.</ErrorText>
+                )}
+              </BoxList>
+            </BoxInStyle>
+
+            <Box>
+              <FlexBox>
+                <TextStyle>카드 이미지</TextStyle>
+                <UploadButton
+                  component="label"
+                  role={undefined}
+                  variant="contained"
                   disableRipple
                 >
-                  <CloseIcon />
-                </CloseIconButtonStyle>
-                <img src={item.img} alt={"카드이미지"} />
-                <Typography>{item.text}</Typography>
-              </PositionBox>
-            ))}
-          </ImageBox>
-          {errors.cardImages && (
-            <ErrorText>카드 이미지는 한개 이상 등록해주세요.</ErrorText>
-          )}
-        </Box>
-      </BoxStyle>
-      <ButtonBox>
-        <CommonButton text="등록" onClick={handleSubmit} />
-        <CommonButton type="Reset" bkColor={"red"} text="취소" />
-      </ButtonBox>
+                  카드이미지 등록
+                  <VisuallyHiddenInput
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleFileChange}
+                  />
+                </UploadButton>
+              </FlexBox>
 
-      {delDialog && (
-        <CommonDialog
-          open={delDialog}
-          title={"카드 등록"}
-          onClose={handleCloseDialog}
-          onClick={handleCloseDialog}
-          children={<p>카드가 등록되었습니다.</p>}
-        />
+              <ImageBox>
+                {imageList.map((item, index) => (
+                  <PositionBox key={index}>
+                    <CloseIconButtonStyle
+                      onClick={() =>
+                        setImageList(imageList.filter((_, i) => i !== index))
+                      }
+                      disableRipple
+                    >
+                      <CloseIcon />
+                    </CloseIconButtonStyle>
+                    <img src={item.img} alt={"카드이미지"} />
+                    <Typography>{item.text}</Typography>
+                  </PositionBox>
+                ))}
+              </ImageBox>
+              {errors.cardImages && (
+                <ErrorText>카드 이미지는 한개 이상 등록해주세요.</ErrorText>
+              )}
+            </Box>
+          </BoxStyle>
+          <ButtonBox>
+            <CommonButton text="등록" onClick={handleSubmit} />
+            <CommonButton type="Reset" bkColor={"red"} text="취소" />
+          </ButtonBox>
+
+          {delDialog && (
+            <CommonDialog
+              open={delDialog}
+              title={"카드 등록"}
+              onClose={handleCloseDialog}
+              onClick={handleCloseDialog}
+              children={<p>카드가 등록되었습니다.</p>}
+            />
+          )}
+        </>
       )}
     </Root>
   );
