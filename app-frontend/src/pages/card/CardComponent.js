@@ -166,15 +166,14 @@ const CardComponent = () => {
                         hover
                         key={item.no}
                         tabIndex={-1}
-                        onClick={(event) => handleClick(event, item.no)}
                         role="checkbox"
                         selected={isItemSelected}
-                        sx={{ cursor: "pointer" }}
                       >
                         <TableCell padding="checkbox">
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
+                            onClick={(event) => handleClick(event, item.no)}
                             inputProps={{
                               "aria-labelledby": labelId,
                             }}
