@@ -339,7 +339,7 @@ const CardComponent = () => {
     if (!validateForm()) {
       return;
     }
-
+    setIsLoading(true);
     const selectedCard = selectList.find((item) => item.label === selectValue);
     const organizationCode = selectedCard ? selectedCard.organizationCode : "";
     const cardProvider = selectedCard ? selectedCard.cardProvider : "";
@@ -369,6 +369,8 @@ const CardComponent = () => {
       resetForm();
     } catch (error) {
       console.error("카드 등록 실패:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -408,6 +410,9 @@ const CardComponent = () => {
     });
   };
 
+  const handleCancle = () => {
+    navigate(-1);
+  };
   return (
     <Root>
       {isLoading ? (
@@ -597,7 +602,12 @@ const CardComponent = () => {
           </BoxStyle>
           <ButtonBox>
             <CommonButton text="등록" onClick={handleSubmit} />
-            <CommonButton type="Reset" bkColor={"red"} text="취소" />
+            <CommonButton
+              type="Reset"
+              bkColor={"red"}
+              text="취소"
+              onClick={handleCancle}
+            />
           </ButtonBox>
 
           {delDialog && (

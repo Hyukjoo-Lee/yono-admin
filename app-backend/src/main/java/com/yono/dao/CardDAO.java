@@ -10,4 +10,8 @@ public interface CardDAO {
     boolean existsByCardTitle(String cardTitle);
 
     void createCard(CardEntity cardEntity);
+
+    void deleteByIds(List<Integer> ids);
+
+    CardEntity findById(Integer id);
 }

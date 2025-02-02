@@ -19,7 +19,7 @@ import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
 import CommonButton from "../../common/CommonButton";
 import { useNavigate } from "react-router-dom";
-import { fetchSearchCard } from "../../apis/CardApi";
+import { deleteCardItems, fetchSearchCard } from "../../apis/CardApi";
 import CommonLoading from "../../common/CommonLoading";
 
 const Root = styled(Box)(({ theme }) => ({}));
@@ -150,8 +150,29 @@ const CardComponent = () => {
     navigate("/cardWrite");
   };
 
-  const handleClickDel = () => {
+  const handleClickDel = async () => {
     setDelDialog(true);
+  };
+
+  const handleConfirmDel = async () => {
+    setIsLoading(true);
+    try {
+      await deleteCardItems(selected);
+
+      const updatedList = list.filter((item) => !selected.includes(item.no));
+      setList(updatedList); // 현재 리스트에서 삭제된 항목 제거
+      setSelected([]); // 선택 초기화
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+
+      setDelDialog(false);
+    } catch (error) {
+      console.error("삭제 중 오류 발생:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleClosekDel = () => {
@@ -256,7 +277,7 @@ const CardComponent = () => {
           title={"카드 삭제"}
           cancelBtn={selected.length === 0 ? false : true}
           onClose={handleClosekDel}
-          onClick={selected.length === 0 ? handleClosekDel : handleClosekDel}
+          onClick={selected.length === 0 ? handleClosekDel : handleConfirmDel}
           children={
             selected.length === 0 ? (
               <p>선택된 목록이 없습니다.</p>
