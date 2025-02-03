@@ -18,9 +18,9 @@ public class CardServiceImpl implements CardService {
     private CardDAO cardDao;
 
     @Override
-    public List<CardDTO> searchNotice(String keyword) {
+    public List<CardDTO> searchCard(String keyword) {
         // Entity -> DTO 변환
-        List<CardEntity> entities = cardDao.searchNotice(keyword);
+        List<CardEntity> entities = cardDao.searchCard(keyword);
         return entities.stream().map(this::toDto).collect(Collectors.toList());
     }
 

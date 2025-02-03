@@ -29,3 +29,9 @@ export const deleteCardItems = async (ids) => {
   const response = await axios.post("/card/delete", ids);
   return response.data;
 };
+
+// 카드 혜택 생성
+export const createCarBenefits = async (cardBenefitInfo) => {
+  const response = await axios.post("/benefit/register", cardBenefitInfo);
+  return response.data;
+};
