@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yono.dto.CardBenefitDTO;
 import com.yono.dto.CardDTO;
 import com.yono.service.CardService;
 
@@ -38,12 +39,12 @@ public class CardController {
     @PostMapping("/create")
     public ResponseEntity<CardDTO> createCard(
             @RequestParam("cardInfo") String cardInfoJson,
+            @RequestParam("benefitsInfo") String benefitsInfoJson,
             @RequestParam(value = "files", required = false) List<MultipartFile> files) throws IOException {
 
         CardDTO cardDTO = objectMapper.readValue(cardInfoJson, CardDTO.class);
-
-        System.out.println("cardDTO: " + cardDTO);
-        System.out.println("files: " + files);
+        List<CardBenefitDTO> benefitsDTOs = objectMapper.readValue(benefitsInfoJson,
+                objectMapper.getTypeFactory().constructCollectionType(List.class, CardBenefitDTO.class));
 
         List<String> filePaths = new ArrayList<>();
 
@@ -56,7 +57,7 @@ public class CardController {
             cardDTO.setCardImgUrl(String.join(",", filePaths));
         }
 
-        CardDTO createdCard = cardService.createCard(cardDTO);
+        CardDTO createdCard = cardService.createCard(cardDTO, benefitsDTOs);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCard);
     }
 

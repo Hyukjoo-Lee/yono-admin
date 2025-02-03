@@ -235,12 +235,11 @@ const CardComponent = () => {
     {
       id: Date.now(),
       checked: false,
-      cardType: "가맹점 선택",
-      benefit: "",
-      description: "",
+      benefitType: "혜택 유형",
+      benefitTitle: "",
+      benefitValue: "",
     },
   ]); // 카드 혜택 목록
-
   const [imageList, setImageList] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -260,8 +259,8 @@ const CardComponent = () => {
     { label: "하나", organizationCode: "0313", cardProvider: "hana" },
   ];
 
-  const cardTypeList = [
-    { label: "가맹점 선택", disabled: true },
+  const cardBenefitTypeList = [
+    { label: "혜택 유형", disabled: true },
     { label: "주유" },
     { label: "여가" },
     { label: "쇼핑" },
@@ -305,9 +304,9 @@ const CardComponent = () => {
       {
         id: Date.now(),
         checked: false,
-        cardType: "가맹점 선택",
-        benefit: "",
-        description: "",
+        benefitType: "혜택 유형",
+        benefitTitle: "",
+        benefitValue: "",
       },
     ]);
   };
@@ -320,7 +319,7 @@ const CardComponent = () => {
     const hasSelectedCompany = selectValue !== "카드사 선택";
     const hasCardName = cardName.trim() !== "";
     const hasValidBenefits = benefits.some(
-      (benefit) => benefit.checked && benefit.benefit.trim() !== ""
+      (benefit) => benefit.checked && benefit.benefitTitle.trim() !== ""
     );
     const hasCardImages = imageList.length > 0;
 
@@ -350,9 +349,19 @@ const CardComponent = () => {
       organizationCode: organizationCode,
     };
 
+    const benefitsData = benefits
+      .filter((b) => b.checked)
+      .map((b) => ({
+        cardTitle: cardName,
+        benefitTitle: b.benefitTitle,
+        benefitValue: b.benefitValue,
+        benefitType: b.benefitType,
+      }));
+
     const formData = new FormData();
 
     formData.append("cardInfo", JSON.stringify(cardFormData));
+    formData.append("benefitsInfo", JSON.stringify(benefitsData));
 
     const imageFiles = imageList.map((image) => image.file).filter(Boolean);
 
@@ -396,9 +405,9 @@ const CardComponent = () => {
       {
         id: Date.now(),
         checked: false,
-        cardType: "가맹점 선택",
-        benefit: "",
-        description: "",
+        benefitType: "혜택 유형",
+        benefitTitle: "",
+        benefitValue: "",
       },
     ]);
     setImageList([]);
@@ -494,38 +503,40 @@ const CardComponent = () => {
                       disableRipple
                     />
                     <CommonSelect
-                      selectList={cardTypeList}
-                      value={benefit.cardType}
+                      selectList={cardBenefitTypeList}
+                      value={benefit.benefitType}
                       setValue={(value) =>
                         setBenefits(
                           benefits.map((b) =>
-                            b.id === benefit.id ? { ...b, cardType: value } : b
+                            b.id === benefit.id
+                              ? { ...b, benefitType: value }
+                              : b
                           )
                         )
                       }
                     />
                     <TextFieldBox>
                       <CommonTextField
-                        placeholder={"카드혜택을 입력해주세요."}
-                        value={benefit.benefit}
+                        placeholder={"카드 혜택 이름을 입력해주세요."}
+                        value={benefit.benefitTitle}
                         onChange={(e) =>
                           setBenefits(
                             benefits.map((b) =>
                               b.id === benefit.id
-                                ? { ...b, benefit: e.target.value }
+                                ? { ...b, benefitTitle: e.target.value }
                                 : b
                             )
                           )
                         }
                       />
                       <CommonTextField
-                        placeholder={"혜택 부가설명"}
-                        value={benefit.description}
+                        placeholder={"혜택 값"}
+                        value={benefit.benefitValue}
                         onChange={(e) =>
                           setBenefits(
                             benefits.map((b) =>
                               b.id === benefit.id
-                                ? { ...b, description: e.target.value }
+                                ? { ...b, benefitValue: e.target.value }
                                 : b
                             )
                           )
