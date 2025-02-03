@@ -24,4 +24,6 @@ public interface CardRepository extends JpaRepository<CardEntity, Integer> {
     @Query(value = "DELETE FROM card WHERE card_id IN (:ids)", nativeQuery = true)
     void deleteByIds(@Param("ids") List<Integer> ids);
 
+    CardEntity findByCardTitle(String cardTitle);
+
 }

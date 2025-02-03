@@ -31,7 +31,7 @@ public class CardController {
 
     @GetMapping("/list")
     public List<CardDTO> searchNotice(@RequestParam("keyword") String keyword) {
-        return cardService.searchNotice(keyword);
+        return cardService.searchCard(keyword);
     }
 
     // 카드 생성 API
