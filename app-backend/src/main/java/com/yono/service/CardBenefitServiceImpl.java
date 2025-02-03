@@ -25,9 +25,6 @@ public class CardBenefitServiceImpl implements CardBenefitService {
     @Autowired
     private CardRepository cardRepository;
 
-    @Autowired
-    private CardDAO cardDAO;
-
     // 카드 제목으로 혜택 조회
     @Override
     public List<CardBenefitDTO> getAllCardBenefitsByCardTitle(String cardTitle) {
@@ -70,7 +67,7 @@ public class CardBenefitServiceImpl implements CardBenefitService {
 
         return savedBenefits;
     }
-    
+
     private CardBenefitEntity toEntity(CardBenefitDTO dto, CardEntity cardEntity) {
         CardBenefitEntity entity = new CardBenefitEntity();
         entity.setBenefitId(dto.getBenefitId());

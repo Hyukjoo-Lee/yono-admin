@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.yono.dao.CardBenefitRepository;
 import com.yono.dao.CardDAO;
+import com.yono.dto.CardBenefitDTO;
 import com.yono.dto.CardDTO;
+import com.yono.entity.CardBenefitEntity;
 import com.yono.entity.CardEntity;
 
 @Service
@@ -16,6 +19,9 @@ public class CardServiceImpl implements CardService {
 
     @Autowired
     private CardDAO cardDao;
+
+    @Autowired
+    private CardBenefitRepository cardBenefitRepository;
 
     @Override
     public List<CardDTO> searchCard(String keyword) {
@@ -25,19 +31,33 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public CardDTO createCard(CardDTO cardDTO) {
+    @Transactional
+    public CardDTO createCard(CardDTO cardDTO, List<CardBenefitDTO> benefitsDTOs) {
         if (cardDao.existsByCardTitle(cardDTO.getCardTitle())) {
-            throw new IllegalArgumentException("이미 존재하는 카드이름입니다.");
+            throw new IllegalArgumentException("이미 존재하는 카드 이름입니다.");
         }
 
         CardEntity cardEntity = toEntity(cardDTO);
         cardDao.createCard(cardEntity);
+
+        if (benefitsDTOs != null && !benefitsDTOs.isEmpty()) {
+            for (CardBenefitDTO dto : benefitsDTOs) {
+                CardBenefitEntity benefitEntity = new CardBenefitEntity();
+                benefitEntity.setBenefitTitle(dto.getBenefitTitle());
+                benefitEntity.setBenefitValue(dto.getBenefitValue());
+                benefitEntity.setBenefitType(dto.getBenefitType());
+                benefitEntity.setCardEntity(cardEntity);
+
+                cardBenefitRepository.save(benefitEntity);
+            }
+        }
         return toDto(cardEntity);
     }
 
     @Transactional
     @Override
     public void deleteByIds(List<Integer> ids) {
+        cardBenefitRepository.deleteByIds(ids);
         cardDao.deleteByIds(ids);
     }
 
@@ -47,7 +67,6 @@ public class CardServiceImpl implements CardService {
         if (cardEntity == null) {
             throw new RuntimeException("Card not found by ID: " + id);
         }
-        // Entity -> DTO 변환
         return toDto(cardEntity);
     }
 
