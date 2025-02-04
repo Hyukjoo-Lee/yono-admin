@@ -189,6 +189,10 @@ const CardComponent = () => {
     setDelDialog(false);
   };
 
+  const handleClickEdit = (cardId) => {
+    navigate(`/cardEdit/${cardId}`);
+  };
+
   return (
     <Root>
       <CommonTitle icon={<CreditCardIcon />} title={"카드 관리"} />
@@ -261,7 +265,10 @@ const CardComponent = () => {
                           <span>{item.cardTitle}</span>
                         </TableCellStyle>
                         <TableCell align="center">
-                          <CommonButton text="수정" />
+                          <CommonButton
+                            text="수정"
+                            onClick={() => handleClickEdit(item.cardId)}
+                          />
                         </TableCell>
                       </TableRow>
                     );
