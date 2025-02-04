@@ -72,6 +72,16 @@ const columns = [
   { id: "edit", label: "", minWidth: 80, align: "center" },
 ];
 
+const cardProviderMap = {
+  nh: "농협",
+  hana: "하나",
+  kb: "국민",
+  samsung: "삼성",
+  hyundai: "현대",
+  shinhan: "신한",
+  // 필요한 카드사 추가 가능
+};
+
 const CardComponent = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -219,11 +229,14 @@ const CardComponent = () => {
                         </TableCell>
                         <TableCell align="center">{item.cardId}</TableCell>
                         <TableCell align="center">
-                          {item.cardProvider}
+                          {cardProviderMap[item.cardProvider] ||
+                            item.cardProvider}
                         </TableCell>
                         <TableCellStyle>
                           <img
-                            src={`http://localhost:8066${item.cardImgUrl?.split(",")[0]}`} // 첫 번째 이미지만 가져오기
+                            src={`http://localhost:8066${
+                              item.cardImgUrl?.split(",")[0]
+                            }`} // 첫 번째 이미지만 가져오기
                             alt={item.cardTitle}
                           />
                           <span>{item.cardTitle}</span>

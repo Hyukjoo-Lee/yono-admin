@@ -43,6 +43,6 @@ public class CardServiceImpl implements CardService {
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt());
     
-        return dto;
+    return dto; 
     }
 }
