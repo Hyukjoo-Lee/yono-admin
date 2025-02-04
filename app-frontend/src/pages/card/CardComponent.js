@@ -17,7 +17,6 @@ import CommonTableHead from "../../common/CommonTableHead";
 import CommonTitle from "../../common/CommonTitle";
 import CommonDialog from "../../common/CommonDialog";
 import CommonEmpty from "../../common/CommonEmpty";
-import CommonButton from "../../common/CommonButton";
 import { useNavigate } from "react-router-dom";
 import { deleteCardItems, fetchSearchCard } from "../../apis/CardApi";
 import CommonLoading from "../../common/CommonLoading";
@@ -189,10 +188,6 @@ const CardComponent = () => {
     setDelDialog(false);
   };
 
-  const handleClickEdit = (cardId) => {
-    navigate(`/cardEdit/${cardId}`);
-  };
-
   return (
     <Root>
       <CommonTitle icon={<CreditCardIcon />} title={"카드 관리"} />
@@ -264,12 +259,7 @@ const CardComponent = () => {
                           />
                           <span>{item.cardTitle}</span>
                         </TableCellStyle>
-                        <TableCell align="center">
-                          <CommonButton
-                            text="수정"
-                            onClick={() => handleClickEdit(item.cardId)}
-                          />
-                        </TableCell>
+                        <TableCell align="center"></TableCell>
                       </TableRow>
                     );
                   })
