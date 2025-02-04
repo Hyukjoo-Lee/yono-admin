@@ -12,8 +12,8 @@ import NoticeEdit from "./pages/notice/NoticeEdit";
 import NoticeView from "./pages/notice/NoticeView";
 import CardEdit from "./pages/card/CardEdit";
 
-export const drawerWidth = 240;
-export const headerHeight = 78;
+export const drawerWidth = 220;
+export const headerHeight = 68;
 
 function App() {
   return (

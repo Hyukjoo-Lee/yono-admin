@@ -62,7 +62,7 @@ const AppBar = styled(MuiAppBar, {
   },
   "& .MuiTypography-root": {
     fontWeight: "bold",
-    fontSize: "1.375rem",
+    fontSize: "1.25rem",
     color: "#000",
   },
 }));

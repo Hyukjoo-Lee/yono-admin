@@ -44,7 +44,7 @@ const ListItemStyle = styled(ListItem, {
   "&.MuiListItem-root": {
     "& .MuiButtonBase-root": {
       padding: 16,
-      fontSize: "1.125rem",
+      fontSize: "1rem",
       borderRadius: 6,
       background: isSelect ? "#EFF3FD" : "#fff",
       color: isSelect ? "#4064e6" : "#000",
@@ -63,6 +63,9 @@ const LogoButton = styled(Button)(({ theme }) => ({
     padding: 0,
     "&:hover": {
       background: "transparent",
+    },
+    "& svg": {
+      width: 100,
     },
   },
 }));

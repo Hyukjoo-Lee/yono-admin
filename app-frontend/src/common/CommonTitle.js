@@ -8,12 +8,12 @@ const TitleBox = styled(Box)(({ theme }) => ({
   marginBottom: 34,
   "& .MuiTypography-root": {
     fontWeight: "bold",
-    fontSize: "1.875rem",
-    marginLeft: 16,
+    fontSize: "1.75rem",
+    marginLeft: 8,
   },
   "& svg": {
-    width: 36,
-    height: 36,
+    width: 32,
+    height: 32,
   },
 }));
 
