@@ -13,9 +13,17 @@ import com.yono.entity.CardEntity;
 public interface CardRepository extends JpaRepository<CardEntity, Integer> {
 
     @Query("SELECT u FROM CardEntity u WHERE "
-            + "((:keyword IS NULL OR LOWER(u.cardProvider) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
-            + "LOWER(u.cardTitle) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
-    List<CardEntity> searchNotice(@Param("keyword") String keyword);
+        + "((:keyword IS NULL OR LOWER(u.cardProvider) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
+        + "LOWER(u.cardTitle) LIKE LOWER(CONCAT('%', :keyword, '%')) OR "
+        + "LOWER(CASE u.cardProvider "
+        + "WHEN 'nh' THEN '농협' "
+        + "WHEN 'hana' THEN '하나' "
+        + "WHEN 'kb' THEN '국민' "
+        + "WHEN 'samsung' THEN '삼성' "
+        + "WHEN 'hyundai' THEN '현대' "
+        + "WHEN 'shinhan' THEN '신한' "
+        + "ELSE u.cardProvider END) LIKE LOWER(CONCAT('%', :keyword, '%'))))")
+    List<CardEntity> searchCard(@Param("keyword") String keyword);
 
     boolean existsByCardTitle(String cardTitle);
 

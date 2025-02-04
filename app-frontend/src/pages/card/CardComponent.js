@@ -259,7 +259,7 @@ const CardComponent = () => {
                         </TableCell>
                         <TableCellStyle>
                           <img
-                            src={`http://localhost:8069${item.cardImgUrl}`}
+                            src={`http://localhost:8066${item.cardImgUrl}`}
                             alt={item.cardTitle}
                           />
                           <span>{item.cardTitle}</span>

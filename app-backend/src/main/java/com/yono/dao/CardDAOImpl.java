@@ -15,7 +15,7 @@ public class CardDAOImpl implements CardDAO {
 
     @Override
     public List<CardEntity> searchCard(String keyword) {
-        return cardRepo.searchNotice(keyword);
+        return cardRepo.searchCard(keyword);
     }
 
     @Override

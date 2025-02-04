@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -59,14 +60,17 @@ public class UserEntity {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
+    @UpdateTimestamp
+    
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Timestamp updatedAt;
 
-    @PreUpdate
-    public void preUpdate() {
-        // 상태가 변경되면 updatedAt이 자동으로 갱신됩니다.
-        if (this.state == 0) {
-            this.updatedAt = LocalDateTime.now();
-        }
-    }
+    // @PreUpdate
+    // public void preUpdate() {
+     //     // 상태가 변경되면 updatedAt이 자동으로 갱신됩니다.
+    //     if (this.state == 0) {
+    //         this.updatedAt = LocalDateTime.now();
+    //     }
+    // }
 }
+

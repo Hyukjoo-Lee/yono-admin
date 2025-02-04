@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
         dto.setState(entity.getState());
         dto.setUserRole(entity.getUserRole());
         dto.setCreatedAt(entity.getCreatedAt());
-        dto.setUpdatedAt(entity.getUpdatedAt() != null ? Timestamp.valueOf(entity.getUpdatedAt()) : null);
+        dto.setUpdatedAt(entity.getUpdatedAt());
 
         return dto;
     }
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
         entity.setState(dto.getState());
         entity.setUserRole(dto.getUserRole());
         entity.setCreatedAt(dto.getCreatedAt());
-        entity.setUpdatedAt(dto.getUpdatedAt() != null ? dto.getUpdatedAt().toLocalDateTime() : null);
+        entity.setUpdatedAt(dto.getUpdatedAt());
 
         return entity;
     }

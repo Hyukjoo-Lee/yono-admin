@@ -339,10 +339,10 @@ const NoticeWrite = () => {
       {delDialog && (
         <CommonDialog
           open={delDialog}
-          title={"공지사항 등록록"}
+          title={"공지사항 등록"}
           onClose={handleCloseDialog}
           onClick={handleCloseDialog}
-          children={<p>공지사항이 등록록되었습니다.</p>}
+          children={<p>공지사항이 등록되었습니다.</p>}
         />
       )}
     </Root>
