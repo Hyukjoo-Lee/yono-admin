@@ -74,6 +74,9 @@ const LogoButton = styled(Button)(({ theme }) => ({
     "&:hover": {
       background: "transparent",
     },
+    "& svg": {
+      width: 100,
+    },
   },
 }));
 
