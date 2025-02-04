@@ -218,7 +218,7 @@ const ErrorText = styled(Typography)(({ theme }) => ({
   },
 }));
 
-const CardWrite = () => {
+const CardEdit = () => {
   const navigate = useNavigate();
   const [selectValue, setSelectValue] = useState("카드사 선택"); // 카드사
   const [cardName, setCardName] = useState(""); // 카드 이름
@@ -435,7 +435,7 @@ const CardWrite = () => {
               <Typography>이전</Typography>
             </ButtonStyle>
           </HeaderBox>
-          <Titlestyle>카드 등록</Titlestyle>
+          <Titlestyle>카드 수정</Titlestyle>
           <BoxStyle>
             <FlexBox>
               <TextStyle
@@ -637,4 +637,4 @@ const CardWrite = () => {
   );
 };
 
-export default CardWrite;
+export default CardEdit;

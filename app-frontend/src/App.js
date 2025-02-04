@@ -10,6 +10,7 @@ import NoticeComponent from "./pages/notice/NoticeComponent";
 import NoticeWrite from "./pages/notice/NoticeWrite";
 import NoticeEdit from "./pages/notice/NoticeEdit";
 import NoticeView from "./pages/notice/NoticeView";
+import CardEdit from "./pages/card/CardEdit";
 
 export const drawerWidth = 240;
 export const headerHeight = 78;
@@ -23,6 +24,7 @@ function App() {
           <Route path="/users" element={<UserComponent />} />
           <Route path="/cardManagement" element={<CardComponent />} />
           <Route path="/cardWrite" element={<CardWrite />} />
+          <Route path="/cardEdit/:id" element={<CardEdit />} />
           <Route path="/communityManagement" element={<CommunityComponent />} />
           <Route path="/noticeManagement" element={<NoticeComponent />} />
           <Route path="/noticeWrite" element={<NoticeWrite />} />
