@@ -19,14 +19,14 @@ const RootIn = styled(Box)(({ theme }) => ({
   backgroundPosition: "bottom right",
   display: "flex",
   flexDirection: "column",
-  backgroundSize: "50%",
+  backgroundSize: "45%",
 }));
 
 const BigText = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
-    fontSize: "4rem",
+    fontSize: "3.75rem",
     fontWeight: 800,
-    marginBottom: 40,
+    marginBottom: 25,
     marginTop: 120,
   },
 }));
@@ -34,7 +34,7 @@ const BigText = styled(Typography)(({ theme }) => ({
 const TextStyle = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
     fontWeight: 400,
-    fontSize: "1.563rem",
+    fontSize: "1.375rem",
     lineHeight: 1.8,
     marginBottom: 10,
   },
@@ -42,7 +42,7 @@ const TextStyle = styled(Typography)(({ theme }) => ({
 
 const SmallText = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
-    fontSize: "1.125rem",
+    fontSize: "1rem",
     fontWeight: "bold",
     color: "#4064e6",
     lineHeight: 1.8,
