@@ -222,7 +222,6 @@ const CardWrite = () => {
   const navigate = useNavigate();
   const [selectValue, setSelectValue] = useState("카드사 선택"); // 카드사
   const [cardName, setCardName] = useState(""); // 카드 이름
-
   const [delDialog, setDelDialog] = useState(false);
   const [errors, setErrors] = useState({
     cardCompany: false,
