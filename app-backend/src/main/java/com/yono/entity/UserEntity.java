@@ -1,11 +1,21 @@
 package com.yono.entity;
 
 import java.sql.Timestamp;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -39,8 +49,6 @@ public class UserEntity {
 
     // 비밀번호 (최소 8자, 소문자 + 숫자 + 특수문자 포함, 필수)
     @NotNull
-    @Size(min = 8, max = 255)
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*\\d)(?=.*[*@#$%^&+=!]).{8,}$", message = "비밀번호는 최소 8자이며, 영문 소문자, 숫자, 특수문자를 포함해야 합니다.")
     @Column(name = "password", nullable = false, length = 255)
     private String password;
 
@@ -53,16 +61,20 @@ public class UserEntity {
 
     // 지출 목표 (기본값 0)
     @Column(name = "spending_target", nullable = false)
+    @ColumnDefault("'0'")
     private int spendingTarget = 0;
 
     @Column(name = "profile", length = 255)
+    @ColumnDefault("'temp_profile'")
     private String profile = "temp_profile";
 
     // 사용자 상태 (기본값 1, 1: 회원, 0: 탈퇴 회원)
     @Column(name = "state", nullable = false)
+    @ColumnDefault("1")
     private int state = 1;
 
     // 사용자 역할 (기본값 1, 0: 관리자, 1: 일반 회원)
+    @ColumnDefault("1")
     @Column(name = "user_role", nullable = false)
     private int userRole = 1;
 

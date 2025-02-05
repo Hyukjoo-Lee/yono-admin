@@ -80,7 +80,6 @@ public class NoticeServiceImpl implements NoticeService {
         dto.setTitle(entity.getTitle());
         dto.setContent(entity.getContent());
         dto.setImgurl(entity.getImgurl());
-        dto.setViewCount(entity.getViewCount());
         dto.setCreatedAt(entity.getCreatedAt());
         dto.setUpdatedAt(entity.getUpdatedAt() != null ? Timestamp.valueOf(entity.getUpdatedAt()) : null);
 
@@ -101,7 +100,6 @@ public class NoticeServiceImpl implements NoticeService {
         entity.setTitle(dto.getTitle());
         entity.setContent(dto.getContent());
         entity.setImgurl(dto.getImgurl());
-        entity.setViewCount(dto.getViewCount());
         entity.setCreatedAt(dto.getCreatedAt());
         entity.setUpdatedAt(dto.getUpdatedAt() != null ? dto.getUpdatedAt().toLocalDateTime() : null);
 

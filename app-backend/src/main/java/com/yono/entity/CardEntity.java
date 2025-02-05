@@ -41,7 +41,7 @@ public class CardEntity {
 
     // 기관 코드 (고정 길이 4자리, 선택)
     @Size(min = 4, max = 4, message = "기관 코드는 정확히 4자리여야 합니다.")
-    @Column(name = "organization_code", nullable = true, length = 4)
+    @Column(name = "organization_code", nullable = false, length = 4)
     private String organizationCode;
 
     // 카드 이미지 URL (최대 길이 255, 선택)

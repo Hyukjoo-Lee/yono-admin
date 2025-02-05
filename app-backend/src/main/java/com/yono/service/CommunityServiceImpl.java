@@ -61,7 +61,7 @@ public class CommunityServiceImpl implements CommunityService {
     // Entity -> DTO 변환
     private CommunityDTO toDto(CommunityEntity entity) {
         CommunityDTO dto = new CommunityDTO();
-        dto.setNo(entity.getNo());
+        dto.setNo(entity.getPno());
         dto.setTitle(entity.getTitle());
         dto.setCategory(entity.getCategory());
         dto.setUserId(entity.getUserEntity().getUserId()); // 유저 정보 매핑

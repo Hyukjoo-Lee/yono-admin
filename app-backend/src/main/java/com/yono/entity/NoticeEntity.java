@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.ForeignKey;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -24,55 +26,49 @@ import lombok.ToString;
 @Getter
 @ToString
 @Entity
-@SequenceGenerator(
-        name = "no_seq_genotice",
-        sequenceName = "notice_seq",
-        initialValue = 1,
-        allocationSize = 1
-)
+@SequenceGenerator(name = "no_seq_genotice", sequenceName = "notice_seq", initialValue = 1, allocationSize = 1)
 @Table(name = "notice")
 public class NoticeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, // 사용할 전략을 시퀀스로 선택
-            generator = "no_seq_genotice") // 시퀀스 생성기에 설정해 놓은 시퀀스 제너레이터 이름
-    @Column(name = "notice_no")
-    private int noticeNo;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "no_seq_genotice")
+  @Column(name = "notice_no")
+  private int noticeNo;
 
-    @Column(name = "title")
-    private String title;
-    @Column(name = "content")
-    private String content;
-    @Column(name = "img_url")
-    private String imgurl;
+  @Size(min = 1, max = 50)
+  @Column(name = "title", nullable = false, length = 50)
+  private String title;
 
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private Timestamp createdAt;
+  @Size(min = 10, max = 4000)
+  @Column(name = "content", nullable = false, length = 4000)
+  private String content;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+  @Size(max = 255)
+  @Column(name = "img_url", length = 255)
+  private String imgurl;
 
-    @ManyToOne
-    @JoinColumn(name = "user_num", referencedColumnName = "user_num")
-    private UserEntity userEntity;
+  @CreationTimestamp
+  @Column(name = "created_at")
+  private Timestamp createdAt;
 
-    @Column(name = "view_count", nullable = false, columnDefinition = "int default 0")
-    private int viewCount = 0;
+  @Column(name = "updated_at")
+  private LocalDateTime updatedAt;
 
-    @PrePersist
-    public void prePersist() {
-        // 등록 시에는 updatedAt을 설정하지 않음
-        if (updatedAt == null) {
-            updatedAt = null;  // 명시적으로 null로 설정 (기본값이 null일 수도 있음)
-        }
+  @ManyToOne
+  @JoinColumn(name = "user_num", referencedColumnName = "user_num", nullable = false, foreignKey = @ForeignKey(name = "fk_notice_user_num"))
+  private UserEntity userEntity;
+
+  @PrePersist
+  public void prePersist() {
+    if (updatedAt == null) {
+      updatedAt = null;
     }
+  }
 
-    @PreUpdate
-    public void preUpdate() {
-        // 수정 시에는 updatedAt을 현재 시간으로 설정
-        if (updatedAt == null) {
-            updatedAt = LocalDateTime.now();
-        }
+  @PreUpdate
+  public void preUpdate() {
+    if (updatedAt == null) {
+      updatedAt = LocalDateTime.now();
     }
+  }
 }
