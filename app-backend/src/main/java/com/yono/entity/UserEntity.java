@@ -69,12 +69,13 @@ public class UserEntity {
     private String profile = "temp_profile";
 
     // 사용자 상태 (기본값 active, active: 회원, inactive: 탈퇴 회원)
-    @Column(name = "state", nullable = false)
-    @ColumnDefault("active")
+    @Column(name = "state", nullable = false, length = 8)
+    @ColumnDefault("'active'")
     private String state = "active";
 
     // 사용자 역할 (기본값 USER, ADMIN: 관리자, USER: 일반 회원)
-    @Column(name = "user_role", nullable = false, length = 255)
+    @Column(name = "user_role", nullable = false, length = 5)
+    @ColumnDefault("'USER'")
     private String userRole = "USER";
 
     @CreationTimestamp
