@@ -13,7 +13,7 @@ public interface UserService {
     
     List<UserDTO> searchUsersById (String keyword);
     
-    int delUserState(int userNum, int state);
+    int delUserState(int userNum, String state);
 
     UserEntity findByUserId(String userId);
 }

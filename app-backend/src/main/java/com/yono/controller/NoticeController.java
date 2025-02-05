@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -27,6 +28,9 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/notice")
 public class NoticeController {
 
+    @Value("${IMAGE_PATH}")
+    private String uploadDir;
+
     @Autowired
     private NoticeService noticeService;
 
@@ -41,7 +45,7 @@ public class NoticeController {
             NoticeDTO notice = noticeService.getNoticeById(id);
             if (notice != null && notice.getImgurl() != null) {
                 // 이미지 파일 삭제
-                String filePath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "") + notice.getImgurl();
+                String filePath = System.getProperty("user.dir") + uploadDir + notice.getImgurl();
                 File file = new File(filePath);
                 if (file.exists()) {
                     if (file.delete()) {
@@ -72,8 +76,9 @@ public class NoticeController {
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        String propertyPath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "");
-        String uploadFolder = propertyPath + "/uploads/images";
+        // String propertyPath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "");
+        // String uploadFolder = propertyPath + "/uploads/images";
+        String uploadFolder = uploadDir + "/uploads/images";
 
         // 현재 날짜로 디렉토리 생성
         Calendar cal = Calendar.getInstance();
@@ -168,7 +173,7 @@ public class NoticeController {
         if (filePath == null || filePath.isEmpty()) {
             return; // 경로가 없는 경우 아무것도 하지 않음
         }
-        String absolutePath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "") + filePath; // 절대 경로 생성
+        String absolutePath = System.getProperty("user.dir") + filePath; // 절대 경로 생성
         File file = new File(absolutePath);
         if (file.exists()) {
             if (file.delete()) {

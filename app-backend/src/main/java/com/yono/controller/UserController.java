@@ -36,7 +36,7 @@ public class UserController {
     }
 
     @PutMapping("/delete")
-    public ResponseEntity<String> delUserState(@RequestParam("userNum") int userNum, @RequestParam("state") int state) {
+    public ResponseEntity<String> delUserState(@RequestParam("userNum") int userNum, @RequestParam("state") String state) {
         int result = userService.delUserState(userNum, state);
         if (result > 0) {
             return ResponseEntity.ok("Success");

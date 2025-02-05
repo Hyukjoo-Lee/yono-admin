@@ -29,7 +29,7 @@ public class UserDAOImpl implements UserDAO {
     }
 
     @Override
-    public int delUserState(int userNum, int state) {
+    public int delUserState(int userNum, String state) {
         return userRepo.delUserState(userNum, state);
     }
     

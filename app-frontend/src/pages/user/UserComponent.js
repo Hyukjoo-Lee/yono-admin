@@ -125,7 +125,7 @@ const UserComponent = () => {
       // 상태 업데이트: 해당 유저를 탈퇴 처리로 변경
       setList((prevList) =>
         prevList.map((user) =>
-          user.userNum === userNum ? { ...user, state: 0 } : user
+          user.userNum === userNum ? { ...user, state: "inactive" } : user
         )
       );
 
@@ -168,7 +168,7 @@ const UserComponent = () => {
 
     // 체크박스가 체크되면 탈퇴 회원만 필터링, 아니면 전체 리스트로 복원
     if (checked) {
-      const filteredList = list.filter((user) => user.state === 0); // 탈퇴 회원만 표시
+      const filteredList = list.filter((user) => user.state === "inactive"); // 탈퇴 회원만 표시
       setList(filteredList);
     } else {
       try {
@@ -221,7 +221,7 @@ const UserComponent = () => {
                         {new Date(item.createdAt).toISOString().split("T")[0]}
                       </TableCell>
                       <TableCell align="center">
-                        {item.state === 0 ? (
+                        {item.state === "inactive" ? (
                           <span>
                             {
                               new Date(item.updatedAt)

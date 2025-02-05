@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public int delUserState(int userNum, int state) {
+    public int delUserState(int userNum, String state) {
         return userDao.delUserState(userNum, state);
     }
 
