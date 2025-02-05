@@ -25,8 +25,8 @@ public class UserDTO {
     private int spendingTarget = 0;
     private String profile = "temp_profile";
 
-    private int state;
-    private int userRole;
+    private String state;
+    private String userRole;
 
     private Timestamp createdAt;
     private Timestamp updatedAt;

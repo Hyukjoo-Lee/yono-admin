@@ -61,22 +61,21 @@ public class UserEntity {
 
     // 지출 목표 (기본값 0)
     @Column(name = "spending_target", nullable = false)
-    @ColumnDefault("'0'")
+    @ColumnDefault("0")
     private int spendingTarget = 0;
 
     @Column(name = "profile", length = 255)
     @ColumnDefault("'temp_profile'")
     private String profile = "temp_profile";
 
-    // 사용자 상태 (기본값 1, 1: 회원, 0: 탈퇴 회원)
+    // 사용자 상태 (기본값 active, active: 회원, inactive: 탈퇴 회원)
     @Column(name = "state", nullable = false)
-    @ColumnDefault("1")
-    private int state = 1;
+    @ColumnDefault("active")
+    private String state = "active";
 
-    // 사용자 역할 (기본값 1, 0: 관리자, 1: 일반 회원)
-    @ColumnDefault("1")
-    @Column(name = "user_role", nullable = false)
-    private int userRole = 1;
+    // 사용자 역할 (기본값 USER, ADMIN: 관리자, USER: 일반 회원)
+    @Column(name = "user_role", nullable = false, length = 255)
+    private String userRole = "USER";
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
