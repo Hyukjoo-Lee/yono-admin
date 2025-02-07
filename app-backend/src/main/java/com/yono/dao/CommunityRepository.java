@@ -26,6 +26,6 @@ public interface CommunityRepository extends JpaRepository<CommunityEntity, Inte
 
     @Modifying
     @Transactional
-    @Query(value = "DELETE FROM tbl_posts WHERE no IN (:ids)", nativeQuery = true)
+    @Query(value = "DELETE FROM post WHERE no IN (:ids)", nativeQuery = true)
     void deleteByIds(@Param("ids") List<Integer> ids);
 }
