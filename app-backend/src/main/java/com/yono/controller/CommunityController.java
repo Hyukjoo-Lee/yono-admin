@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/community")
 public class CommunityController {
+
+    @Value("${IMAGE_PATH}")
+    private String uploadDir;
 
     @Autowired
     private CommunityService communityService;
@@ -46,8 +50,9 @@ public class CommunityController {
             CommunityDTO community = communityService.getCommunityById(id);
             if (community != null && community.getImgurl() != null) {
                 // 이미지 파일 삭제
-                String filePath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "") + "/uploads/images" + community.getImgurl();
+                String filePath = uploadDir + community.getImgurl();
                 File file = new File(filePath);
+                
                 if (file.exists()) {
                     if (file.delete()) {
                         log.info("Deleted image file: " + filePath);

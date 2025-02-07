@@ -1,6 +1,7 @@
 package com.yono.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity findByUserId(String userId) {
+    public Optional<UserEntity> findByUserId(String userId) {
         return userDao.findByUserId(userId);
     }
 

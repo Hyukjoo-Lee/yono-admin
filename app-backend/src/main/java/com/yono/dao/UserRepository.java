@@ -1,6 +1,7 @@
 package com.yono.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -31,5 +32,5 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Query("UPDATE UserEntity u SET u.state = :state, u.updatedAt = CURRENT_TIMESTAMP WHERE u.userNum = :userNum")
     int delUserState(@Param("userNum") int userNum, @Param("state") String state);
 
-    UserEntity findByUserId(String userId);
+    Optional<UserEntity> findByUserId(String userId);
 }

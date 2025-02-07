@@ -45,7 +45,8 @@ public class NoticeController {
             NoticeDTO notice = noticeService.getNoticeById(id);
             if (notice != null && notice.getImgurl() != null) {
                 // 이미지 파일 삭제
-                String filePath = System.getProperty("user.dir") + uploadDir + notice.getImgurl();
+                String filePath = uploadDir + notice.getImgurl();
+
                 File file = new File(filePath);
                 if (file.exists()) {
                     if (file.delete()) {
@@ -70,14 +71,12 @@ public class NoticeController {
             noticeDto.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
         noticeDto.setUpdatedAt(null);
-        noticeDto.setUserId("adminId");  // 관리자 아이디
+        noticeDto.setUserId("adminid");  // 관리자 아이디
         noticeService.saveNotice(noticeDto);     // 공지사항 저장
         return ResponseEntity.ok().build();
     }
 
     private String saveFile(MultipartFile file) throws IOException {
-        // String propertyPath = System.getProperty("user.dir").replace("\\app-backend", "").replace("/app-backend", "");
-        // String uploadFolder = propertyPath + "/uploads/images";
         String uploadFolder = uploadDir + "/uploads/images";
 
         // 현재 날짜로 디렉토리 생성
@@ -171,10 +170,14 @@ public class NoticeController {
 
     private void deleteFile(String filePath) {
         if (filePath == null || filePath.isEmpty()) {
+            log.warn("파일 경로가 비어 있습니다. 삭제할 수 없습니다.");
             return; // 경로가 없는 경우 아무것도 하지 않음
         }
-        String absolutePath = System.getProperty("user.dir") + filePath; // 절대 경로 생성
+        String absolutePath = uploadDir + filePath; // 절대 경로 생성
         File file = new File(absolutePath);
+
+        log.info("삭제할 파일 경로: " + absolutePath);  // 경로 확인 로그 추가
+
         if (file.exists()) {
             if (file.delete()) {
                 log.info("Deleted file: " + absolutePath);

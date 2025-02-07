@@ -1,6 +1,7 @@
 package com.yono.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.yono.dto.UserDTO;
 import com.yono.entity.UserEntity;
@@ -15,5 +16,5 @@ public interface UserService {
     
     int delUserState(int userNum, String state);
 
-    UserEntity findByUserId(String userId);
+    Optional<UserEntity> findByUserId(String userId);
 }

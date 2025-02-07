@@ -2,6 +2,7 @@ package com.yono.service;
 
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.yono.dao.NoticeDAO;
 import com.yono.dto.NoticeDTO;
 import com.yono.entity.NoticeEntity;
+import com.yono.entity.UserEntity;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {
@@ -38,6 +40,12 @@ public class NoticeServiceImpl implements NoticeService {
     public void saveNotice(NoticeDTO noticeDto) {
         // DTO -> Entity 변환
         NoticeEntity entity = toEntity(noticeDto);
+
+        // userEntity가 null이면 예외를 던져서 null 저장을 방지
+        if (entity.getUserEntity() == null) {
+            throw new RuntimeException("User entity is required for saving the notice.");
+        }
+
         noticeDao.saveNotice(entity);
     }
 
@@ -63,6 +71,18 @@ public class NoticeServiceImpl implements NoticeService {
         existingNotice.setContent(noticeDto.getContent());
         if (noticeDto.getImgurl() != null) {
             existingNotice.setImgurl(noticeDto.getImgurl());
+        }
+
+        // UserEntity를 다시 설정
+        if (noticeDto.getUserId() != null && !noticeDto.getUserId().isEmpty()) {
+            Optional<UserEntity> user = userService.findByUserId(noticeDto.getUserId());
+            if (user.isPresent()) {
+                existingNotice.setUserEntity(user.get());  // Optional에서 UserEntity를 추출
+            } else {
+                throw new RuntimeException("ID에 해당하는 사용자를 찾을 수 없습니다.: " + noticeDto.getUserId());
+            }
+        } else {
+            throw new RuntimeException("공지사항 업데이트를 위해서는 사용자 ID가 필요합니다.");
         }
 
         noticeDao.saveNotice(existingNotice); // 업데이트
@@ -103,9 +123,16 @@ public class NoticeServiceImpl implements NoticeService {
         entity.setCreatedAt(dto.getCreatedAt());
         entity.setUpdatedAt(dto.getUpdatedAt() != null ? dto.getUpdatedAt().toLocalDateTime() : null);
 
+        // UserEntity를 userId를 통해 조회해서 설정
         if (dto.getUserId() != null && !dto.getUserId().isEmpty()) {
-            entity.setUserEntity(userService.findByUserId(dto.getUserId()));
+            Optional<UserEntity> user = userService.findByUserId(dto.getUserId());
+            if (user.isPresent()) {  // Optional이 비어 있지 않으면
+                entity.setUserEntity(user.get());  // UserEntity 객체를 추출하여 설정
+            } else {
+                throw new RuntimeException("ID에 해당하는 사용자를 찾을 수 없습니다.: " + dto.getUserId());
+            }
         }
+
         return entity;
     }
 }

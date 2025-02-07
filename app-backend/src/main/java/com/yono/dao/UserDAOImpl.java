@@ -1,6 +1,7 @@
 package com.yono.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -34,7 +35,7 @@ public class UserDAOImpl implements UserDAO {
     }
     
     @Override
-    public UserEntity findByUserId(String userId) {
+    public Optional<UserEntity> findByUserId(String userId) {
         return userRepo.findByUserId(userId);
     }
 
