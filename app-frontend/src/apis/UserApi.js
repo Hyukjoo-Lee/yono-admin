@@ -11,7 +11,7 @@ export const fetchSearchResults = async (keyword, selectValue) => {
 // 회원 탈퇴
 export const handleDeleteUser = async (userNum) => {
   try {
-    const response = await axios.put(`/user/delete?userNum=${userNum}&state=inactive`);
+    const response = await axios.put(`/user/delete?userNum=${userNum}&state=INACTIVE`);
     return response.data;
   } catch (error) {
     console.error("탈퇴 실패:", error);

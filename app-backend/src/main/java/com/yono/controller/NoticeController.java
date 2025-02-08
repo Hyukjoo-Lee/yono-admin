@@ -71,7 +71,7 @@ public class NoticeController {
             noticeDto.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
         noticeDto.setUpdatedAt(null);
-        noticeDto.setUserId("adminid");  // 관리자 아이디
+        noticeDto.setUserId("admin");  // 관리자 아이디
         noticeService.saveNotice(noticeDto);     // 공지사항 저장
         return ResponseEntity.ok().build();
     }

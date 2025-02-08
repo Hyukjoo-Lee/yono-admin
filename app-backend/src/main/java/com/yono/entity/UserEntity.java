@@ -70,8 +70,8 @@ public class UserEntity {
 
     // 사용자 상태 (기본값 active, active: 회원, inactive: 탈퇴 회원)
     @Column(name = "state", nullable = false, length = 8)
-    @ColumnDefault("'active'")
-    private String state = "active";
+    @ColumnDefault("'INACTIVE'")
+    private String state = "INACTIVE";
 
     // 사용자 역할 (기본값 USER, ADMIN: 관리자, USER: 일반 회원)
     @Column(name = "user_role", nullable = false, length = 5)
