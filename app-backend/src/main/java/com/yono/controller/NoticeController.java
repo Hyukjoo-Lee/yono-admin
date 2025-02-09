@@ -23,22 +23,38 @@ import com.yono.dto.NoticeDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 공지사항 관련 요청을 처리하는 컨트롤러 클래스
+ */
 @Slf4j
 @RestController
 @RequestMapping("/notice")
 public class NoticeController {
 
+    /** 이미지 저장 경로 */
     @Value("${IMAGE_PATH}")
     private String uploadDir;
 
     @Autowired
     private NoticeService noticeService;
 
+    /**
+     * 공지사항 검색 API
+     *
+     * @param keyword 검색어 (제목 기준)
+     * @return 검색된 공지사항 목록
+     */
     @GetMapping("/list")
     public List<NoticeDTO> searchNotice(@RequestParam("keyword") String keyword) {
         return noticeService.searchNotice(keyword);
     }
 
+    /**
+     * 공지사항 삭제 API
+     *
+     * @param ids 삭제할 공지사항 ID 목록
+     * @return 삭제 성공 응답
+     */
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteByNotice(@RequestBody List<Integer> ids) {
         for (Integer id : ids) {
@@ -62,6 +78,14 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 공지사항 저장 API
+     *
+     * @param noticeDto 공지사항 정보
+     * @param file      업로드할 이미지 파일 (선택 사항)
+     * @return 저장 성공 응답
+     * @throws IOException 파일 저장 오류 발생 시
+     */
     @PostMapping("/write")
     public ResponseEntity<Void> saveNotice(@ModelAttribute NoticeDTO noticeDto,
             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
@@ -76,6 +100,13 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 파일 저장 메서드
+     *
+     * @param file 업로드할 파일
+     * @return 저장된 파일의 경로 (DB 저장용)
+     * @throws IOException 파일 저장 오류 발생 시
+     */
     private String saveFile(MultipartFile file) throws IOException {
         String uploadFolder = uploadDir + "/uploads/images";
 
@@ -120,6 +151,12 @@ public class NoticeController {
         return fileDBName;  // DB에 저장할 경로 반환
     }
 
+     /**
+     * 공지사항 상세 조회 API
+     *
+     * @param id 공지사항 ID
+     * @return 공지사항 DTO
+     */
     @GetMapping("/detail")
     public ResponseEntity<NoticeDTO> getNoticeDetail(@RequestParam("id") int id) {
         NoticeDTO notice = noticeService.getNoticeById(id);
@@ -130,6 +167,17 @@ public class NoticeController {
         }
     }
 
+    /**
+     * 공지사항 수정 API
+     *
+     * @param id      수정할 공지사항 ID
+     * @param title   제목
+     * @param content 내용
+     * @param file    수정할 파일 (선택 사항)
+     * @param imgurl  기존 이미지 경로 (삭제 여부 판단)
+     * @return 수정 성공 응답
+     * @throws IOException 파일 저장 오류 발생 시
+     */
     @PostMapping("/edit")
     public ResponseEntity<Void> editNotice(
             @RequestParam("id") int id, // 수정할 공지사항 ID
@@ -168,6 +216,11 @@ public class NoticeController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * 파일 삭제 메서드
+     *
+     * @param filePath 삭제할 파일 경로
+     */
     private void deleteFile(String filePath) {
         if (filePath == null || filePath.isEmpty()) {
             log.warn("파일 경로가 비어 있습니다. 삭제할 수 없습니다.");

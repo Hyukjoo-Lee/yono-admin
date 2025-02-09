@@ -18,18 +18,28 @@ import com.yono.dto.CommunityDTO;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * 커뮤니티 관련 요청을 처리하는 컨트롤러 클래스
+ */
 @Slf4j
-
 @RestController
 @RequestMapping("/community")
 public class CommunityController {
 
+     /** 이미지 저장 경로 */
     @Value("${IMAGE_PATH}")
     private String uploadDir;
 
     @Autowired
     private CommunityService communityService;
 
+    /**
+     * 커뮤니티 검색 API
+     *
+     * @param keyword     검색어 (카테고리, 작성자, 제목 기준)
+     * @param selectValue 검색 기준 (카테고리, 작성자, 제목)
+     * @return 검색된 커뮤니티 게시글 목록
+     */
     @GetMapping("/list")
     public List<CommunityDTO> searchCommunuity(@RequestParam("keyword") String keyword, @RequestParam("selectValue") String selectValue) {
         switch (selectValue) {
@@ -44,6 +54,12 @@ public class CommunityController {
         }
     }
 
+    /**
+     * 커뮤니티 게시글 삭제 API
+     *
+     * @param ids 삭제할 게시글 ID 목록
+     * @return 삭제 성공 응답
+     */
     @PostMapping("/delete")
     public ResponseEntity<Void> deleteCommunityItems(@RequestBody List<Integer> ids) {
         for (Integer id : ids) {

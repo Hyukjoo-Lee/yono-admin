@@ -18,36 +18,72 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserDAO userDao;
 
+    /**
+     * 키워드를 기준으로 사용자 검색
+     *
+     * @param keyword 검색어
+     * @return 검색된 사용자 목록
+     */
     @Override
     public List<UserDTO> searchUsers(String keyword) {
         List<UserEntity> entities = userDao.searchUsers(keyword);
         return toDtoList(entities);
     }
 
+    /**
+     * 이름을 기준으로 사용자 검색
+     *
+     * @param keyword 검색어
+     * @return 검색된 사용자 목록
+     */
     @Override
     public List<UserDTO> searchUsersByName(String keyword) {
         List<UserEntity> entities = userDao.searchUsersByName(keyword);
         return toDtoList(entities);
     }
 
+    /**
+     * 아이디를 기준으로 사용자 검색
+     *
+     * @param keyword 검색어
+     * @return 검색된 사용자 목록
+     */
     @Override
     public List<UserDTO> searchUsersById(String keyword) {
         List<UserEntity> entities = userDao.searchUsersById(keyword);
         return toDtoList(entities);
     }
 
+     /**
+     * 사용자 상태 변경 (예: 삭제 상태로 변경)
+     *
+     * @param userNum 사용자 번호
+     * @param state   변경할 상태값
+     * @return 업데이트된 행 개수
+     */
     @Transactional
     @Override
     public int delUserState(int userNum, String state) {
         return userDao.delUserState(userNum, state);
     }
 
+    /**
+     * 사용자 아이디로 사용자 찾기
+     *
+     * @param userId 사용자 아이디
+     * @return 사용자 엔티티 (Optional)
+     */
     @Override
     public Optional<UserEntity> findByUserId(String userId) {
         return userDao.findByUserId(userId);
     }
 
-    // Entity -> DTO 변환
+    /**
+     * UserEntity 객체를 UserDTO 객체로 변환
+     *
+     * @param entity 변환할 엔티티 객체
+     * @return 변환된 DTO 객체
+     */
     public static UserDTO toDto(UserEntity entity) {
         if (entity == null) {
             return null;
@@ -69,7 +105,12 @@ public class UserServiceImpl implements UserService {
         return dto;
     }
 
-    // DTO -> Entity 변환
+    /**
+     * UserDTO 객체를 UserEntity 객체로 변환
+     *
+     * @param dto 변환할 DTO 객체
+     * @return 변환된 엔티티 객체
+     */
     public static UserEntity toEntity(UserDTO dto) {
         if (dto == null) {
             return null;
@@ -91,7 +132,12 @@ public class UserServiceImpl implements UserService {
         return entity;
     }
 
-    // Entity List -> DTO List 변환
+    /**
+     * UserEntity 리스트를 UserDTO 리스트로 변환
+     *
+     * @param entities 변환할 엔티티 리스트
+     * @return 변환된 DTO 리스트
+     */
     public static List<UserDTO> toDtoList(List<UserEntity> entities) {
         return entities.stream()
                 .map(UserServiceImpl::toDto)

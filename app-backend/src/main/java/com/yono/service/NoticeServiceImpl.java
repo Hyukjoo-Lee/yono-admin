@@ -14,6 +14,9 @@ import com.yono.dto.NoticeDTO;
 import com.yono.entity.NoticeEntity;
 import com.yono.entity.UserEntity;
 
+/**
+ * 공지사항 서비스 구현 클래스
+ */
 @Service
 public class NoticeServiceImpl implements NoticeService {
 
@@ -23,6 +26,12 @@ public class NoticeServiceImpl implements NoticeService {
     @Autowired
     private UserService userService;
 
+    /**
+     * 키워드를 이용하여 공지사항 검색
+     *
+     * @param keyword 검색어 (제목 기준)
+     * @return 검색된 공지사항 목록
+     */
     @Override
     public List<NoticeDTO> searchNotice(String keyword) {
         // Entity -> DTO 변환
@@ -30,12 +39,23 @@ public class NoticeServiceImpl implements NoticeService {
         return entities.stream().map(this::toDto).collect(Collectors.toList());
     }
 
+    /**
+     * 공지사항 삭제
+     *
+     * @param ids 삭제할 공지사항 ID 목록
+     */
     @Transactional
     @Override
     public void deleteByNotice(List<Integer> ids) {
         noticeDao.deleteByNotice(ids);
     }
 
+    /**
+     * 공지사항 저장
+     *
+     * @param noticeDto 저장할 공지사항 정보
+     * @throws RuntimeException 사용자 정보가 없을 경우 예외 발생
+     */
     @Override
     public void saveNotice(NoticeDTO noticeDto) {
         // DTO -> Entity 변환
@@ -49,6 +69,13 @@ public class NoticeServiceImpl implements NoticeService {
         noticeDao.saveNotice(entity);
     }
 
+    /**
+     * 공지사항 ID로 조회
+     *
+     * @param id 공지사항 ID
+     * @return 조회된 공지사항 DTO
+     * @throws RuntimeException 공지사항이 없을 경우 예외 발생
+     */
     @Override
     public NoticeDTO getNoticeById(int id) {
         NoticeEntity noticeEntity = noticeDao.findById(id);
@@ -59,6 +86,13 @@ public class NoticeServiceImpl implements NoticeService {
         return toDto(noticeEntity);
     }
 
+    /**
+     * 공지사항 업데이트
+     *
+     * @param noticeDto 수정할 공지사항 정보
+     * @return 수정 성공 여부 (true: 성공, false: 실패)
+     * @throws RuntimeException 사용자 ID가 없거나 존재하지 않는 경우 예외 발생
+     */
     @Override
     public boolean updateNotice(NoticeDTO noticeDto) {
         NoticeEntity existingNotice = noticeDao.findById(noticeDto.getNoticeNo()); // ID로 기존 공지사항 조회
@@ -89,7 +123,12 @@ public class NoticeServiceImpl implements NoticeService {
         return true;
     }
 
-    // Entity -> DTO 변환
+    /**
+     * NoticeEntity 객체를 NoticeDTO 객체로 변환
+     *
+     * @param entity 변환할 엔티티 객체
+     * @return 변환된 DTO 객체
+     */
     private NoticeDTO toDto(NoticeEntity entity) {
         if (entity == null) {
             return null;
@@ -109,7 +148,13 @@ public class NoticeServiceImpl implements NoticeService {
         return dto;
     }
 
-    // DTO -> Entity 변환
+    /**
+     * NoticeDTO 객체를 NoticeEntity 객체로 변환
+     *
+     * @param dto 변환할 DTO 객체
+     * @return 변환된 엔티티 객체
+     * @throws RuntimeException 사용자 ID에 해당하는 사용자가 없을 경우 예외 발생
+     */
     private NoticeEntity toEntity(NoticeDTO dto) {
         if (dto == null) {
             return null;
