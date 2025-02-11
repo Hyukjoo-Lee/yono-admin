@@ -53,7 +53,7 @@ public class NoticeServiceImpl implements NoticeService {
     /**
      * 공지사항 저장
      *
-     * @param noticeDto 저장할 공지사항 정보
+     * @param noticeDto 저장할 공지사항 정보, 어드민인지 체크
      * @throws RuntimeException 사용자 정보가 없을 경우 예외 발생
      */
     @Override
@@ -111,7 +111,7 @@ public class NoticeServiceImpl implements NoticeService {
         if (noticeDto.getUserId() != null && !noticeDto.getUserId().isEmpty()) {
             Optional<UserEntity> user = userService.findByUserId(noticeDto.getUserId());
             if (user.isPresent()) {
-                existingNotice.setUserEntity(user.get());  // Optional에서 UserEntity를 추출
+                existingNotice.setUserEntity(user.get()); // Optional에서 UserEntity를 추출
             } else {
                 throw new RuntimeException("ID에 해당하는 사용자를 찾을 수 없습니다.: " + noticeDto.getUserId());
             }
@@ -171,8 +171,8 @@ public class NoticeServiceImpl implements NoticeService {
         // UserEntity를 userId를 통해 조회해서 설정
         if (dto.getUserId() != null && !dto.getUserId().isEmpty()) {
             Optional<UserEntity> user = userService.findByUserId(dto.getUserId());
-            if (user.isPresent()) {  // Optional이 비어 있지 않으면
-                entity.setUserEntity(user.get());  // UserEntity 객체를 추출하여 설정
+            if (user.isPresent()) { // Optional이 비어 있지 않으면
+                entity.setUserEntity(user.get()); // UserEntity 객체를 추출하여 설정
             } else {
                 throw new RuntimeException("ID에 해당하는 사용자를 찾을 수 없습니다.: " + dto.getUserId());
             }

@@ -92,6 +92,7 @@ const ContnetsBox = styled(Box)(({ theme }) => ({
 const TextStyle = styled(Typography)(({ theme }) => ({
   "&.MuiTypography-root": {
     fontSize: "1rem",
+    whiteSpace: "pre-line",
   },
 }));
 
@@ -154,11 +155,12 @@ const NoticeView = () => {
   };
 
   const createdAt = notice.createdAt;
+  console.log("createdAt:" + createdAt);
   // createdAt가 유효한지 확인
   const formattedDate = createdAt ? new Date(createdAt) : null;
   const dateString =
     formattedDate && !isNaN(formattedDate)
-      ? formattedDate.toISOString().split("T")[0]
+      ? new Date(createdAt).toLocaleDateString("ko-KR")
       : "날짜가 잘못됨";
 
   return (
