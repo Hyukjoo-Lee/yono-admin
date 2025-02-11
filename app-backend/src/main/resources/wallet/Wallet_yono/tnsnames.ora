@@ -1,0 +1,12 @@
+yono_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ge8212e8dab5acd_yono_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+yono_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ge8212e8dab5acd_yono_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+yono_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ge8212e8dab5acd_yono_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+yono_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ge8212e8dab5acd_yono_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+yono_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.ap-chuncheon-1.oraclecloud.com))(connect_data=(service_name=ge8212e8dab5acd_yono_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
