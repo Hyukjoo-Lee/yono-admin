@@ -98,18 +98,18 @@ public class NoticeController {
 
         // user_info 테이블에서 'admin' 여부 확인
         boolean isAdmin = userService.isAdminUser("admin");
-        
+
         if (!isAdmin) {
             return ResponseEntity.status(403).build(); // 권한 없음 (403 Forbidden)
         }
 
         noticeDto.setUpdatedAt(null);
         noticeDto.setUserId("admin");  // 관리자 아이디
-        noticeService.saveNotice(noticeDto);  // 공지사항 저장
         if (file != null && !file.isEmpty()) {
             String fileName = saveFile(file);  // 파일 저장 후 경로 반환
             noticeDto.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
+        noticeService.saveNotice(noticeDto);  // 공지사항 저장
         return ResponseEntity.ok().build();
     }
 

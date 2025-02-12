@@ -62,7 +62,7 @@ select * from user_info where email = 'mk@google.com';
 
 drop table user_info;
 
-update user_info set state = 1 where user_num = 50;
+update user_info set user_role = 'ADMIN' where user_num = 1;
 
 select * from user_info;
 
