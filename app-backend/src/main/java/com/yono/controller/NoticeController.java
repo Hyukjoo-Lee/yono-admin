@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.yono.service.NoticeService;
+import com.yono.service.UserService;
 import com.yono.dto.NoticeDTO;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,12 +32,17 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/notice")
 public class NoticeController {
 
-    /** 이미지 저장 경로 */
+    /**
+     * 이미지 저장 경로
+     */
     @Value("${IMAGE_PATH}")
     private String uploadDir;
 
     @Autowired
     private NoticeService noticeService;
+
+    @Autowired
+    private UserService userService;  // User 정보 조회 서비스
 
     /**
      * 공지사항 검색 API
@@ -82,7 +88,7 @@ public class NoticeController {
      * 공지사항 저장 API
      *
      * @param noticeDto 공지사항 정보
-     * @param file      업로드할 이미지 파일 (선택 사항)
+     * @param file 업로드할 이미지 파일 (선택 사항)
      * @return 저장 성공 응답
      * @throws IOException 파일 저장 오류 발생 시
      */
@@ -90,13 +96,20 @@ public class NoticeController {
     public ResponseEntity<Void> saveNotice(@ModelAttribute NoticeDTO noticeDto,
             @RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
 
+        // user_info 테이블에서 'admin' 여부 확인
+        boolean isAdmin = userService.isAdminUser("admin");
+        
+        if (!isAdmin) {
+            return ResponseEntity.status(403).build(); // 권한 없음 (403 Forbidden)
+        }
+
+        noticeDto.setUpdatedAt(null);
+        noticeDto.setUserId("admin");  // 관리자 아이디
+        noticeService.saveNotice(noticeDto);  // 공지사항 저장
         if (file != null && !file.isEmpty()) {
             String fileName = saveFile(file);  // 파일 저장 후 경로 반환
             noticeDto.setImgurl(fileName);      // 공지사항에 이미지 경로 설정
         }
-        noticeDto.setUpdatedAt(null);
-        noticeDto.setUserId("admin");  // 관리자 아이디
-        noticeService.saveNotice(noticeDto);     // 공지사항 저장
         return ResponseEntity.ok().build();
     }
 
@@ -151,7 +164,7 @@ public class NoticeController {
         return fileDBName;  // DB에 저장할 경로 반환
     }
 
-     /**
+    /**
      * 공지사항 상세 조회 API
      *
      * @param id 공지사항 ID
@@ -170,11 +183,11 @@ public class NoticeController {
     /**
      * 공지사항 수정 API
      *
-     * @param id      수정할 공지사항 ID
-     * @param title   제목
+     * @param id 수정할 공지사항 ID
+     * @param title 제목
      * @param content 내용
-     * @param file    수정할 파일 (선택 사항)
-     * @param imgurl  기존 이미지 경로 (삭제 여부 판단)
+     * @param file 수정할 파일 (선택 사항)
+     * @param imgurl 기존 이미지 경로 (삭제 여부 판단)
      * @return 수정 성공 응답
      * @throws IOException 파일 저장 오류 발생 시
      */

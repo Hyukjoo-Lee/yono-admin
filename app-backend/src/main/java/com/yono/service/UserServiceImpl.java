@@ -54,11 +54,11 @@ public class UserServiceImpl implements UserService {
         return toDtoList(entities);
     }
 
-     /**
+    /**
      * 사용자 상태 변경 (예: 삭제 상태로 변경)
      *
      * @param userNum 사용자 번호
-     * @param state   변경할 상태값
+     * @param state 변경할 상태값
      * @return 업데이트된 행 개수
      */
     @Transactional
@@ -76,6 +76,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserEntity> findByUserId(String userId) {
         return userDao.findByUserId(userId);
+    }
+
+    /**
+     * 관리자 아이디로 찾기
+     *
+     * @param userId 관리자 아이디
+     * @return booldean
+     */
+    @Override
+    public boolean isAdminUser(String userId) {
+        return userDao.findByUserId(userId)
+                .map(user -> "ADMIN".equals(user.getUserRole()))
+                .orElse(false);
     }
 
     /**

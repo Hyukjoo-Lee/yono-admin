@@ -33,10 +33,9 @@ public class UserDAOImpl implements UserDAO {
     public int delUserState(int userNum, String state) {
         return userRepo.delUserState(userNum, state);
     }
-    
+
     @Override
     public Optional<UserEntity> findByUserId(String userId) {
         return userRepo.findByUserId(userId);
     }
-
 }
